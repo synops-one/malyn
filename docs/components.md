@@ -8,11 +8,11 @@ Malyn.cmd components install embeddings
 Malyn.cmd components
 ```
 
-For source installations use `node bin/malyn.mjs` instead of `Malyn.cmd`. Pass `--config PATH` to target another installation. Preferences and MCP `action: "components"` show installation status. Downloads happen during setup, never as an implicit result of submitting a loop. Allow several GB for weights, runtime archives and extraction. Files live in `components/` beside the configuration and are retained on upgrade/removal. If a release changes a component pin, rename its old component directory before reinstalling; stale builds are rejected.
+If you installed from source, use `node bin/malyn.mjs` instead of `Malyn.cmd`. Pass `--config PATH` to target another installation. Preferences and MCP `action: "components"` show installation status. Downloads happen during setup, never as an implicit result of submitting a loop. Allow several GB for weights, runtime archives and extraction. Files live in `components/` beside the configuration and are retained on upgrade/removal. If a release changes a component pin, rename its old component directory before reinstalling; stale builds are rejected.
 
 ## GPU use and lifetime
 
-Both processors select the GPU matching Malyn's configuration. An unavailable device fails the job; there is no CPU or remote fallback. Each unloads Malyn's own idle general model before starting and releases its native process on completion. Unrelated loaded models are left alone and can still consume VRAM. The next general task reloads Gemma. One job is admitted per configuration; separate installations do not coordinate GPU access.
+Both processors select the GPU matching your Malyn configuration. If that device is unavailable, the job fails; there is no CPU or remote fallback. Each unloads Malyn's own idle general model before starting and releases its native process on completion. Unrelated loaded models are left alone and can still consume VRAM. The next general task reloads Gemma. One job is admitted per configuration; separate installations do not coordinate GPU access.
 
 The B580 profile applies `GGML_VK_DISABLE_HOST_VISIBLE_VIDMEM=1` to newly started runtime processes. This is process-scoped, not a global Windows setting. An already running LM Studio GUI/daemon keeps its original environment. If needed, close it while idle and launch it from a PowerShell session with `$env:GGML_VK_DISABLE_HOST_VISIBLE_VIDMEM='1'` before loading the model. Changing GPU enclosures also warrants `lms runtime survey --refresh --json` before loading. Do not enable this workaround globally for unrelated CPU workloads.
 
@@ -22,7 +22,7 @@ The B580 profile applies `GGML_VK_DISABLE_HOST_VISIBLE_VIDMEM=1` to newly starte
 Malyn.cmd submit --loop transcribe-audio --root C:\audio --file recording.wav
 ```
 
-Whisper Base accepts one mono 16 kHz, 16-bit PCM WAV, at most ten minutes and 20 MiB. Convert other formats locally first. Automatic language detection is used. The result is a draft transcript, not a diarized meeting record, microphone assistant or spoken reply. Important wording needs checking against the recording. The default response contains a generic completion note and a link to `transcript.md`.
+Whisper Base accepts one mono 16 kHz, 16-bit PCM WAV, at most ten minutes and 20 MiB. Convert other formats locally first. Automatic language detection is used. The result is a draft transcript, not a diarized meeting record, microphone assistant or spoken reply. Check important wording against the recording. The default response contains a generic completion note and a link to `transcript.md`.
 
 ## Embed text and images
 

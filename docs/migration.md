@@ -1,6 +1,6 @@
 # Moving and upgrading Malyn
 
-For an ordinary upgrade, finish active work, close the tray/admin UI, extract the new Windows ZIP and run `Install-Malyn.cmd` against the existing installation. Settings are retained unless explicitly overridden. Restart Codex after setup.
+For an ordinary upgrade, finish active work, close the tray/admin UI, extract the new Windows ZIP and run `Install-Malyn.cmd` against the existing installation. Your settings are retained unless you explicitly override them. Restart Codex after setup.
 
 To copy an existing Malyn configuration into a separate installation directory:
 
@@ -14,6 +14,6 @@ The new app is verified before Codex registration is updated to its new location
 
 Original files, configuration, models and job history remain in place. New jobs are stored under the new installation. Do not run both configurations concurrently: their worker locks are separate. Do not run a removal script from the previous location without checking the registration it owns.
 
-For source installs, `--config PATH` takes precedence over `MALYN_CONFIG`, then the normal per-user Malyn location. No prototype environment variable, configuration filename or registration alias is discovered automatically. For a configuration from another tool, manually review and map supported fields into a new `malyn.config.json`; model identifiers must be supplied explicitly when reusing a particular loaded model.
+For source installs, `--config PATH` takes precedence over `MALYN_CONFIG`, then the normal per-user Malyn location. Malyn does not automatically discover environment variables, configuration filenames or registration aliases from other tools. If you are moving a configuration from another tool, review and map supported fields into a new `malyn.config.json`. Supply the model identifier explicitly if you want to reuse a particular loaded model.
 
 Backups and original files allow manual rollback. Restore a saved Codex configuration only after reviewing subsequent changes, or re-register the prior Malyn entry point explicitly.

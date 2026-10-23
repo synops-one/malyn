@@ -10,7 +10,7 @@ Malyn ships with:
 - [transcribe-audio](../loops/transcribe-audio.md): GPU Whisper transcription of one bounded WAV file.
 - [embed-local-files](../loops/embed-local-files.md): GPU Qwen embeddings for up to four text files/images.
 
-An image attachment plus `@malyn` selects the image loop through the routing skill. The client must expose a local attachment path or support an authorised local download. This does not add an attachment API or change what the cloud chat already received.
+An image attachment plus `@malyn` selects the image loop through the routing skill. Your client must expose a local attachment path or support an authorised local download. This does not add an attachment API or change what the cloud chat already received.
 
 ## Format and sharing
 
@@ -31,11 +31,11 @@ Use a filename matching the loop's lowercase hyphenated name. Include one `malyn
 }
 ```
 
-Declare `vision` when images are accepted. Ordinary loops use the default `agent` processor and require `tools` because the model must save the report. Optional `model.preferredModelKey` pins a preferred downloaded model key, and `model.minOutputTokens` sets a minimum generation allowance for the job without changing defaults. A caller may override the preferred model per job but cannot bypass capability or minimum-context checks. Metadata is checked with a strict schema; the complete file is limited to 64 KiB and the worker contract to 10,000 characters.
+Declare `vision` when images are accepted. Ordinary loops use the default `agent` processor and require `tools` because the model must save the report. Optional `model.preferredModelKey` pins a preferred downloaded model key, and `model.minOutputTokens` sets a minimum generation allowance for the job without changing defaults. You can override the preferred model per job, but you cannot bypass capability or minimum-context checks. Metadata is checked with a strict schema; the complete file is limited to 64 KiB and the worker contract to 10,000 characters.
 
 The fixed `processor: "whisper"` and `processor: "embeddings"` implementations use their declared component model and save the artifact directly. They do not interpret the worker contract as instructions to run code or change inference parameters. A conflicting model override fails. Copy the corresponding bundled loop for their required metadata and bounds. CLI `prepare` checks that component files are installed and valid; the actual GPU load occurs during the job.
 
-Additional Markdown sections should explain the trigger, inputs, supervisor steps, acceptance checks and chat response. Only the `Worker contract` section and caller task are sent to the local model. The entire loop is available to the supervising agent. Installation copies the file without executing it. Review shared loop instructions before using them; they cannot grant permissions or override the user's request.
+Additional Markdown sections should explain the trigger, inputs, supervisor steps, acceptance checks and chat response. Only the `Worker contract` section and caller task are sent to the local model. The entire loop is available to the supervising agent. Installation copies the file without executing it. Review shared loop instructions before using them; they cannot grant permissions or override your request.
 
 ```powershell
 malyn loops
@@ -44,7 +44,7 @@ malyn loop install C:\loops\my-log-review.md
 malyn submit --loop describe-my-image --root C:\inputs --image photo.png
 ```
 
-User loops live in `loops/` beside the active configuration. Built-in loops live in the application package. Duplicate names are refused during installation, and manually placed user files cannot shadow bundled loops. A submitted job contains a snapshot of its contract, so later loop edits do not change that job.
+Your installed loops live in `loops/` beside the active configuration. Built-in loops live in the application package. Duplicate names are refused during installation, and manually placed files cannot shadow bundled loops. A submitted job contains a snapshot of its contract, so later loop edits do not change that job.
 
 ## MCP controls
 
@@ -71,4 +71,4 @@ Selection order: per-job model override, loop preference, compatible configured 
 
 `returnMode: "summary"` explicitly opts into generated summary text. It is not a redaction feature. Detailed reports, `answer.txt`, job status and logs remain on disk; retrieving any of them into a frontier agent's context can disclose their contents. Returned paths and filenames also reach that agent. Inputs already uploaded to cloud chat have already crossed that boundary.
 
-For loops, completion requires the named artifact as well as a successful model stop. Existence is not proof of correctness. When the user requests detailed review, validate source evidence and structured output before using findings or applying draft code. Keep system repairs separate from diagnostics.
+For loops, completion requires the named artifact as well as a successful model stop. Existence is not proof of correctness. When you need a detailed review, validate source evidence and structured output before using findings or applying draft code. Keep system repairs separate from diagnostics.

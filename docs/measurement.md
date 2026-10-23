@@ -6,4 +6,4 @@ Malyn reports local prompt tokens (summed over rounds, so repeated context is co
 
 For throughput comparisons, hold model weights/hash, quantization, prompt, output length, context, KV format, runtime and hardware topology constant. Separate prompt processing from generation. The reported last decode speed is not whole-job throughput. No SYCL-versus-Vulkan speed claim is part of this release.
 
-Useful jobs have a small brief, substantial targeted local reading, and a short result or saved draft. Trivial requests and jobs that need repeated correction can cost more supervisor time and tokens than doing them directly.
+Choose jobs with a small brief, substantial targeted local reading, and a short result or saved draft. Trivial requests and jobs that need repeated correction can cost more supervisor time and tokens than completing them directly.

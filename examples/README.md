@@ -1,6 +1,6 @@
 # Example jobs
 
-All data here is synthetic. Use this directory as the task root; pass the named file and the short task to `malyn submit` or the MCP `malyn` tool.
+All data here is synthetic. To try an example, use this directory as your task root and pass the named file and short task to `malyn submit` or the MCP `malyn` tool.
 
 | File | Task |
 | --- | --- |
@@ -13,4 +13,4 @@ malyn submit --root C:\src\malyn\examples --file service.log --task "Read servic
 malyn check JOB_ID
 ```
 
-For Codex, ask a normal file-oriented question after installing the routing skill. It recommends delegation when useful; the supervising model still decides whether a particular job fits. No MCP server can force every client to delegate automatically.
+For Codex, ask a normal file-oriented question after installing the routing skill. The skill recommends delegation when useful; your supervising model still decides whether a particular job fits. Installing the MCP server does not make every client delegate automatically.

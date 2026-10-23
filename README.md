@@ -2,7 +2,7 @@
 
 A local AI plugin for MCP agents. Give it a bounded task and file paths; it processes them on your hardware, saves a report and returns a generic completion note plus local artifact links by default.
 
-Malyn is useful for log triage, image descriptions, extracting facts across text files and proposed code changes. Its model has no shell or connectors and cannot edit source files. The supervisor handles authorised collection, detailed review and applying changes.
+Use Malyn to triage logs, describe images, extract facts across text files and draft code changes. Its model has no shell or connectors and cannot edit source files. Use your MCP agent for authorised file collection, detailed review and applying changes.
 
 ## 0.0.42alphaz public preview
 
@@ -10,13 +10,13 @@ Malyn is useful for log triage, image descriptions, extracting facts across text
 
 [![Malyn: frontier brains, local grunt work](docs/media/demo-poster.png)](https://github.com/synops-one/malyn/releases/download/v0.0.42alphaz/Malyn-0.0.42alphaz-landscape.mp4)
 
-The package and installer are pinned to **0.0.42**; the GitHub prerelease is labelled **0.0.42alphaz**. This is an early Windows preview tested on the development B580 host. Fresh-account installation and the GPU disconnect/reconnect matrix remain unverified. The demo uses real product footage with synthetic inputs; processing waits are omitted and labelled.
+The package and installer use version **0.0.42**; the GitHub prerelease is labelled **0.0.42alphaz**. This early Windows preview has been tested on an Intel Arc B580. Fresh-account installation and GPU disconnect/reconnect testing remain unverified. The demo shows the 0.0.41 development UI with real product footage and synthetic inputs; processing waits are omitted and labelled.
 
 ## Tray, settings and administration
 
 Version **0.0.42** includes a Windows tray icon and an on-demand local admin UI. The tray offers status, pause/resume and **Open Malyn**. The web interface has model settings, job/report history, shared loops, access boundaries and runtime limits. It binds only to `127.0.0.1`, uses a temporary authenticated session and stops after two minutes without UI activity. No web server runs just because the tray is open.
 
-The installer starts the tray; `Open-Malyn.cmd` reopens it. Sign-in startup is optional in Preferences. Source users can run `node bin/malyn.mjs tray` or `node bin/malyn.mjs ui`. Pause blocks new tasks; existing jobs finish normally. Model/settings changes are refused during active jobs. See the [desktop guide](docs/desktop.md) for lifecycle, security and CLI controls. Restart MCP clients after an upgrade to activate the new controls.
+The installer starts the tray; use `Open-Malyn.cmd` to reopen it. You can enable sign-in startup in Preferences. If you're running from source, use `node bin/malyn.mjs tray` or `node bin/malyn.mjs ui`. Pause blocks new tasks; existing jobs finish normally. Malyn blocks model/settings changes until active jobs finish. See the [desktop guide](docs/desktop.md) for lifecycle, security and CLI controls. Restart your MCP clients after an upgrade to activate the new controls.
 
 ## Windows quick start
 
@@ -25,9 +25,9 @@ The installer starts the tray; `Open-Malyn.cmd` reopens it. Sign-in startup is o
 3. Setup installs a private Node runtime, locates or downloads the LM Studio headless runtime, locates or downloads the model, performs a real file-to-artifact smoke test, and registers the MCP server and routing skill with Codex.
 4. Restart Codex. Open Malyn from the new tray icon to review settings, then ask Codex to investigate a bounded set of files; the routing skill recommends Malyn when delegation is useful.
 
-The default target is **Intel Arc B580 (12 GB), standard Gemma 4 12B QAT Q4_0, 64K context and Q8 KV cache, using LM Studio Vulkan on Windows**. The downloaded model with vision support is approximately 7.2 GB in decimal units; allow additional space for runtimes, archives, job data and future updates. Existing downloads are reused. Setup verifies real local inference before registering the worker. Context remains configurable up to the model/runtime limit; larger settings need their own memory check. Image inference, GPU Whisper transcription and multimodal embeddings have been exercised on the release host's B580; this does not replace fresh-machine testing.
+The default target is **Intel Arc B580 (12 GB), standard Gemma 4 12B QAT Q4_0, 64K context and Q8 KV cache, using LM Studio Vulkan on Windows**. The downloaded model with vision support is approximately 7.2 GB in decimal units; allow additional space for runtimes, archives, job data and future updates. Setup reuses your existing downloads and verifies real local inference before registering the worker. You can configure context up to the model/runtime limit; check memory usage before choosing a larger setting. Image inference, GPU Whisper transcription and multimodal embeddings have been tested on that B580 setup. Installation on a fresh machine has not yet been verified.
 
-The earlier B60 preset remains available with `-Profile arc-b60`: standard Qwen3.8 27B Q4_K_M at 128K context. Ordinary upgrades retain existing model/GPU settings. Passing `-Profile arc-b580` explicitly switches the profile defaults; individual parameters still override them. Other Vulkan GPUs/models are configurable but experimental.
+You can use the earlier B60 preset with `-Profile arc-b60`: standard Qwen3.8 27B Q4_K_M at 128K context. Ordinary upgrades keep your existing model/GPU settings. Pass `-Profile arc-b580` to switch to the B580 defaults; individual parameters still override them. You can configure other Vulkan GPUs/models, but they remain experimental.
 
 ```powershell
 # Use an already downloaded model:
@@ -46,9 +46,9 @@ The earlier B60 preset remains available with `-Profile arc-b60`: standard Qwen3
 .\Install-Malyn.ps1 -SkipRegister
 ```
 
-The default location is `%LOCALAPPDATA%\Malyn`. Launch `Malyn.cmd` there for CLI commands. Setup is per-user and does not install a GPU driver, reboot Windows or register a system service. Upgrades retain configuration unless overridden, preserve previous app versions, and refuse to replace a running worker. `Remove-Malyn.ps1` disconnects the registration and its unchanged routing skill; models, runtimes, configuration and job results are retained and their locations are reported.
+The default installation directory is `%LOCALAPPDATA%\Malyn`. Launch `Malyn.cmd` there for CLI commands. Setup installs for your Windows account and does not install a GPU driver, reboot Windows or register a system service. Upgrades keep your configuration unless you override it, preserve previous app versions, and refuse to replace a running worker. Use `Remove-Malyn.ps1` to disconnect the registration and its unchanged routing skill. It keeps your models, runtimes, configuration and job results, and reports their locations.
 
-To move an existing Malyn configuration to a new installation directory, use `Install-Malyn.ps1 -MigrateFrom 'C:\path\to\Malyn' -InstallDir 'D:\Apps\Malyn'`. Setup preserves explicit model and runtime settings, verifies the new app, and registers its new location. Historical jobs stay in their original directory. See [moving and upgrading Malyn](docs/migration.md).
+To move your Malyn configuration to a new installation directory, use `Install-Malyn.ps1 -MigrateFrom 'C:\path\to\Malyn' -InstallDir 'D:\Apps\Malyn'`. Setup preserves your configured model and runtime settings, verifies the new app, and registers its new location. Your previous jobs stay in their original directory. See [moving and upgrading Malyn](docs/migration.md).
 
 ## Source and CLI
 
@@ -56,7 +56,7 @@ To move an existing Malyn configuration to a new installation directory, use `In
 
 Enable **Add Ask Malyn to the file right-click menu** in Models & settings → Preferences, or install with `-WithExplorer`. Right-click one text/code file or PNG/JPEG/WebP image and choose **Show more options → Ask Malyn** on Windows 11. The local job view opens with progress and a link to an enriched summary: overview, key facts, supported concerns and next steps. It uses the configured general model (Gemma 4 12B by default), loading it if necessary. Only that selected file is readable by the worker; sibling files are excluded in code. No source is modified.
 
-This first version accepts UTF-8 text/code up to 2 MB and images up to 10 MiB. PDF, Office documents, archives and other binary formats need explicit conversion first. Files are not uploaded to a cloud agent by this action. If Malyn is busy or paused, it explains that rather than queuing an invisible task. CLI equivalents: `Malyn.cmd ask C:\inputs\note.txt` and `Malyn.cmd explorer on|off|status`.
+This first version accepts UTF-8 text/code up to 2 MB and images up to 10 MiB. Convert PDF, Office documents, archives and other binary formats before submitting them. Ask Malyn does not upload your file to a cloud agent. If Malyn is busy or paused, it tells you; it does not queue the task. CLI equivalents: `Malyn.cmd ask C:\inputs\note.txt` and `Malyn.cmd explorer on|off|status`.
 
 ### Screenshot mode
 
@@ -91,9 +91,9 @@ The [Malyn skill](skills/malyn-worker/SKILL.md) teaches Codex to choose useful w
 
 ## Contract and limits
 
-The `malyn` MCP tool supports asynchronous `submit`, `check` and `cancel`, runtime `status`, loop discovery/installation, local model listing and supported configuration changes. Submit a task or loop name, an absolute root and optional relative files/images. It returns a job ID immediately. By default, checks return a generic note and artifact paths, keeping generated details local. `returnMode: "summary"` explicitly opts into generated summary text. Only `completed` is a finished run; `failed`, `cancelled`, `interrupted` and `incomplete` need attention. One job runs per config directory.
+The `malyn` MCP tool supports asynchronous `submit`, `check` and `cancel`, runtime `status`, loop discovery/installation, local model listing and supported configuration changes. Submit a task or loop name, an absolute root and optional relative files/images. It returns a job ID immediately. By default, checks return a generic note and artifact paths, keeping generated details local. Set `returnMode: "summary"` to opt into generated summary text. Only `completed` is a finished run; `failed`, `cancelled`, `interrupted` and `incomplete` need attention. One job runs per config directory.
 
-Reads are bounded by paths, file size, tool-call count and a tokenizer-based context budget. Set `allowedRoots` to restrict caller-selected task roots. Common secret names and links are excluded, but this is not an OS sandbox or comprehensive secret scanner. Results and any artifacts read by a cloud supervisor may enter its cloud context. See [security boundaries](SECURITY.md).
+Reads are bounded by paths, file size, tool-call count and a tokenizer-based context budget. Set `allowedRoots` to restrict the task roots your agent can choose. Common secret names and links are excluded, but this is not an OS sandbox or comprehensive secret scanner. Results and any artifacts your cloud agent reads may enter its cloud context. See [security boundaries](SECURITY.md).
 
 Local prompt/generated tokens and decode speed are reported per job. They are not measured cloud tokens or quota saved. Small tasks and repeated corrections can erase the benefit. See [measurement](docs/measurement.md), [configuration](docs/configuration.md) and [synthetic examples](examples/README.md).
 
@@ -105,7 +105,7 @@ Malyn includes five shareable Markdown **loops**:
 - [transcribe-audio](loops/transcribe-audio.md): transcribe a WAV recording using Whisper Base on the configured GPU.
 - [embed-local-files](loops/embed-local-files.md): generate local text/image vectors with Qwen3-VL-Embedding-2B on the configured GPU.
 
-Each declares its model requirements and output checks. Optional components download only during explicit setup, load when their loop runs and unload afterwards. Malyn unloads its own idle general model to make room; the next general task reloads it. CPU and remote fallback are disabled. The [component guide](docs/components.md) covers installation, input limits and upstream sources; the [loop guide](docs/loops.md) covers sharing, MCP controls and report links.
+Each declares its model requirements and output checks. Optional components download only when you choose to install them, load when their loop runs and unload afterwards. Malyn unloads its own idle general model to make room; the next general task reloads it. CPU and remote fallback are disabled. The [component guide](docs/components.md) covers installation, input limits and upstream sources; the [loop guide](docs/loops.md) covers sharing, MCP controls and report links.
 
 ```powershell
 node bin/malyn.mjs loops
@@ -113,7 +113,7 @@ node bin/malyn.mjs loop windows-system-logs
 node bin/malyn.mjs submit --loop describe-my-image --root C:\inputs --image photo.png
 ```
 
-Codex and Claude Code support local stdio MCP servers. The Windows installer registers Codex; [Claude Code](https://code.claude.com/docs/en/mcp) can connect using `claude mcp add --transport stdio malyn -- node C:\src\malyn\bin\malyn.mjs serve --config C:\path\malyn.config.json`. Use the installed private Node path if Node is not on PATH. Claude Code compatibility follows the standard MCP interface; a live Claude client has not been validated in this release. Other clients need local file/collection access to carry out the loop's supervisor steps.
+Codex and Claude Code support local stdio MCP servers. The Windows installer registers Codex. To connect [Claude Code](https://code.claude.com/docs/en/mcp), use `claude mcp add --transport stdio malyn -- node C:\src\malyn\bin\malyn.mjs serve --config C:\path\malyn.config.json`. Use the installed private Node path if Node is not on PATH. Claude Code compatibility follows the standard MCP interface; a live Claude client has not been validated in this release. If you use another client, it needs local file/collection access to carry out the loop's supervisor steps.
 
 ## Development and release
 
