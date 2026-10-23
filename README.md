@@ -1,4 +1,10 @@
-# Malyn
+<p align="center">
+  <img src="src/ui/logo.png" alt="Malyn portrait logo" width="280" />
+</p>
+
+<h1 align="center">Malyn</h1>
+
+<p align="center"><strong>Your AI agent. Your hardware.</strong></p>
 
 A local AI plugin for MCP agents. Give it a bounded task and file paths; it processes them on your hardware, saves a report and returns a generic completion note plus local artifact links by default.
 
@@ -7,8 +13,6 @@ Use Malyn to triage logs, describe images, extract facts across text files and d
 ## 0.0.42alphaz public preview
 
 [Download the Windows release](https://github.com/synops-one/malyn/releases/tag/v0.0.42alphaz) · [Watch the 67-second demo](https://github.com/synops-one/malyn/releases/download/v0.0.42alphaz/Malyn-0.0.42alphaz-landscape.mp4)
-
-[![Malyn: frontier brains, local grunt work](docs/media/demo-poster.png)](https://github.com/synops-one/malyn/releases/download/v0.0.42alphaz/Malyn-0.0.42alphaz-landscape.mp4)
 
 The package and installer use version **0.0.42**; the GitHub prerelease is labelled **0.0.42alphaz**. This early Windows preview has been tested on an Intel Arc B580. Fresh-account installation and GPU disconnect/reconnect testing remain unverified. The demo shows the 0.0.41 development UI with real product footage and synthetic inputs; processing waits are omitted and labelled.
 
