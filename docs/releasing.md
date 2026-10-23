@@ -16,7 +16,7 @@ The GitHub Actions workflow runs tests and builds downloadable workflow artifact
 
 Before publishing:
 
-1. Use `synops-one/malyn` as the source repository. The 0.0.42 package is released as the `v0.0.42alphaz` GitHub prerelease. If you also publish to npm, confirm ownership and name availability first.
+1. Use `synops-one/malyn` as the source repository. Package version `0.0.68-Betaz` is released as the `v0.0.68Betaz` GitHub prerelease. Keep previous release tags and assets intact. If you also publish to npm, confirm ownership and name availability first.
 2. Verify the `repository`, `homepage`, issue and private security-reporting URLs. Verify rights to all contributions and retain license notices.
 3. Before promoting beyond public preview, test the Windows ZIP on a fresh Windows account with the intended eGPU and driver. Test install, disconnect/reconnect, upgrade and removal. Record runtime and model versions. Fresh-machine installation and eGPU disconnect/reconnect remain unverified for this preview. A passing smoke test on your existing installation does not verify those flows.
 4. Run the build from the release commit. Inspect the ZIP/tar file lists, checksums and example outputs. Review `npm audit --omit=dev` at release time and assess findings; a lockfile is not a perpetual vulnerability guarantee.

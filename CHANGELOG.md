@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.0.68Betaz
+
+- Includes Kitchen and recipe import/export from the source preview.
+- Uses natural skin tones for Malyn's tray icon, browser favicon and navigation mark.
+- Registers and verifies Ask Malyn through Windows' registry service so a private host registry view cannot produce a false enabled state. Entries remain scoped to the current user and retain ownership checks.
+- Shortens the Explorer command by storing installation paths in its private registration record, and refreshes Explorer after registration changes.
+- Displays 0.0.68Betaz in the app; package and plugin metadata use the semver version `0.0.68-Betaz`.
+
 ## 0.0.42+kitchen.1 (source preview)
 
 - Kitchen replaces the Loops screen, with a Markdown file picker, readable preview and recipe import/export.

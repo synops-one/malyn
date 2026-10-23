@@ -79,7 +79,8 @@ export async function startAdminServer(configPath, options = {}) {
         if (req.method === 'GET' && url.pathname === '/api/ping') return json(res,{ok:true});
         if (req.method === 'GET' && url.pathname === '/api/state') {
           const [config,control,jobs,version] = await Promise.all([readConfig(configPath),readControl(configPath),listJobs(configPath,50),fs.readFile(new URL('../package.json',import.meta.url),'utf8')]);
-          return json(res,{version:JSON.parse(version).version,settings:visibleSettings(config),control,jobs,platform:process.platform});
+          const metadata=JSON.parse(version);
+          return json(res,{version:metadata.version,displayVersion:metadata.displayVersion??metadata.version,settings:visibleSettings(config),control,jobs,platform:process.platform});
         }
         if (req.method === 'GET' && url.pathname === '/api/models') return json(res,await (options.listModels ?? listModels)(await readConfig(configPath)));
         if (req.method === 'GET' && url.pathname === '/api/components') return json(res,await listComponents(configPath));

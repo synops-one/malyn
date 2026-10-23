@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "malyn-worker",
-  "version": "0.0.42+kitchen.1",
+  "version": "0.0.68-Betaz",
   "description": "Let Malyn help with local text and vision work using shareable Markdown recipes, your own models and your own hardware.",
   "author": {
     "name": "Malyn contributors"

@@ -12,7 +12,7 @@ Your AI agent can hand her the time-consuming reading while it plans the next st
 
 Malyn gives you a way to put your own hardware to work and keep bulk file processing on your computer, without pasting everything into a chat.
 
-[Download Malyn for Windows](https://github.com/synops-one/malyn/releases/tag/v0.0.42alphaz) · [Watch the 67-second demo](https://github.com/synops-one/malyn/releases/download/v0.0.42alphaz/Malyn-0.0.42alphaz-landscape.mp4)
+[Download Malyn for Windows](https://github.com/synops-one/malyn/releases/tag/v0.0.68Betaz) · [Watch the 67-second demo](https://github.com/synops-one/malyn/releases/download/v0.0.42alphaz/Malyn-0.0.42alphaz-landscape.mp4)
 
 ## What can she help with?
 
@@ -29,7 +29,7 @@ She can also help your coding agent review files and draft changes. Your agent h
 
 This preview is built around **Windows 11 and the Intel Arc B580 with 12 GB of memory**, using **Gemma 4 12B** by default. Connect your GPU and install its driver first.
 
-1. Download and extract [Malyn-0.0.42-Windows-x64.zip](https://github.com/synops-one/malyn/releases/download/v0.0.42alphaz/Malyn-0.0.42-Windows-x64.zip).
+1. Download and extract [Malyn-0.0.68-Betaz-Windows-x64.zip](https://github.com/synops-one/malyn/releases/download/v0.0.68Betaz/Malyn-0.0.68-Betaz-Windows-x64.zip).
 2. Run `Install-Malyn.cmd`. Setup downloads the local runtime and model if needed, checks that they work, and connects Malyn to Codex.
 3. Restart Codex, then try asking, **“Malyn, check my system logs.”**
 4. Open Malyn from her tray icon to choose your settings and enable the Windows features you want.
@@ -66,14 +66,14 @@ See [how recipes work](docs/recipes.md), [example jobs](examples/README.md) and 
 
 ## About this preview
 
-- **Release: 0.0.42alphaz.** The app and installer use version **0.0.42**. This is an early Windows release tested on a B580. Fresh-account/fresh-machine installation and GPU disconnect/reconnect still need verification. Other GPUs and model combinations are experimental.
+- **Release: 0.0.68Betaz.** Package and plugin metadata use **0.0.68-Betaz**. This is an early Windows release tested on a B580. Fresh-account/fresh-machine installation and GPU disconnect/reconnect still need verification. Other GPUs and model combinations are experimental.
 - **Codex has been tested.** Claude Code and other compatible MCP clients can be configured, but they haven't been validated for this release. See [connecting your agent](docs/setup.md#mcp-clients).
 - **One job at a time.** Malyn needs her configured GPU. She won't silently switch to your CPU or a cloud model, and she doesn't queue new jobs while busy.
 - **The demo shows the 0.0.41 development build.** It uses real product footage and synthetic files. Processing waits are cut out and labelled; it isn't a speed benchmark.
 
 ## Cook with her
 
-Her **Kitchen** is where your recipes live. Import a Markdown recipe, read what it does and export a copy to share or adapt. The Kitchen is available in the current source preview, `0.0.42+kitchen.1`; the published `0.0.42alphaz` download still has the earlier Loops screen.
+Her **Kitchen** is where your recipes live. Import a Markdown recipe, read what it does and export a copy to share or adapt. Kitchen and recipe import/export are included in **0.0.68Betaz**.
 
 For model settings and advanced options, see [configuration](docs/configuration.md) and the [setup and command-line guide](docs/setup.md). To compare speed or token use, see [measurement](docs/measurement.md); local token counts aren't a measure of cloud tokens saved.
 

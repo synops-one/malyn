@@ -1,6 +1,7 @@
 {
   "name": "malyn-local-worker",
-  "version": "0.0.42+kitchen.1",
+  "version": "0.0.68-Betaz",
+  "displayVersion": "0.0.68Betaz",
   "license": "MIT",
   "author": "Malyn contributors",
   "type": "module",

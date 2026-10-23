@@ -4,7 +4,7 @@ For a quick introduction, start with the [Malyn README](../README.md). This guid
 
 ## Windows installation
 
-1. Download and extract [Malyn-0.0.42-Windows-x64.zip](https://github.com/synops-one/malyn/releases/download/v0.0.42alphaz/Malyn-0.0.42-Windows-x64.zip). Connect the GPU and install its vendor driver.
+1. Download and extract [Malyn-0.0.68-Betaz-Windows-x64.zip](https://github.com/synops-one/malyn/releases/download/v0.0.68Betaz/Malyn-0.0.68-Betaz-Windows-x64.zip). Connect the GPU and install its vendor driver.
 2. Run `Install-Malyn.cmd`. It starts `Install-Malyn.ps1`; command-line parameters are forwarded to that script.
 3. Setup installs a private Node runtime, locates or downloads the LM Studio headless runtime, locates or downloads the model, performs a real file-to-artifact smoke test, and registers the MCP server and routing skill with Codex.
 4. Restart Codex. Open Malyn from the new tray icon to review settings, then ask Codex to investigate a bounded set of files; the routing skill recommends Malyn when delegation is useful.

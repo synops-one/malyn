@@ -49,7 +49,7 @@ function showCapabilities() {
 async function refreshState(initial=false) {
   state=await api('state');offline=false;
   busy=state.jobs.some(job=>job.status==='running');
-  $('#version').textContent=`Malyn ${state.version}`;
+  $('#version').textContent=`Malyn ${state.displayVersion??state.version}`;
   $('#model-name').textContent=state.settings.modelKey;
   $('#context-size').textContent=Number(state.settings.contextLength).toLocaleString();
   $('#active-count').textContent=busy?'1 running':'Idle';
