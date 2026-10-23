@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="src/ui/logo.png" alt="Malyn portrait logo" width="280" />
+  <img src="docs/media/demo-poster.png" alt="Malyn — Frontier brains. Local grunt work. An MCP plugin for your own hardware." width="100%" />
 </p>
 
 <h1 align="center">Malyn</h1>
