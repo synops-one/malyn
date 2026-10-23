@@ -1,0 +1,13 @@
+{
+  "profile": "custom",
+  "backend": "lmstudio",
+  "lmsPath": "lms.exe",
+  "modelKey": "replace-with-local-model-key",
+  "modelIdentifier": "malyn-worker",
+  "gpuPattern": "replace-with-GPU-name-pattern",
+  "runtimePattern": "vulkan",
+  "contextLength": 16384,
+  "kvCacheQuantization": "q8_0",
+  "maxOutputTokens": 2200,
+  "reasoningBudget": 300
+}

@@ -1,0 +1,34 @@
+name: Verify and package
+on:
+  workflow_dispatch:
+  push:
+    tags: ['v*']
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm test
+      - run: npm run licenses
+      - run: npm run release:check
+      - name: Build distributable artifacts
+        if: github.event_name != 'pull_request'
+        shell: pwsh
+        run: ./scripts/Build-Package.ps1
+      - uses: actions/upload-artifact@v4
+        if: github.event_name != 'pull_request'
+        with:
+          name: malyn-release
+          path: |
+            dist/Malyn-*.zip
+            dist/malyn-local-worker-*.tgz
+            dist/SHA256SUMS
+          if-no-files-found: error

@@ -1,0 +1,7 @@
+Ticket: DEMO-1042 (synthetic)
+Service: demo-inventory
+Symptom: clients receive TLS certificate expired on connection.
+Observed: gateway certificate expired at 2026-01-04T00:00:00Z.
+Action taken: the gateway certificate was renewed and the gateway reloaded.
+Verification: a test client connected successfully at 2026-01-04T00:12:00Z.
+Open follow-up: why the automatic renewal job did not run has not been investigated.

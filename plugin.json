@@ -1,0 +1,16 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "malyn-worker",
+  "version": "0.0.42",
+  "description": "Delegate local text and vision work through shareable Markdown loops, with model controls and private reports linked back to your agent.",
+  "author": {
+    "name": "Malyn contributors"
+  },
+  "license": "MIT",
+  "keywords": [
+    "local-llm",
+    "coding",
+    "mcp",
+    "worker"
+  ]
+}

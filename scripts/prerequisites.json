@@ -1,0 +1,11 @@
+{
+  "node": {
+    "version": "24.22.0",
+    "url": "https://nodejs.org/dist/v24.22.0/node-v24.22.0-win-x64.zip",
+    "sha256": "F9683A19877E12A9B167305C8DB71040D812876359DE21F0D2E97C3F321F80C3"
+  },
+  "llmster": {
+    "url": "https://llmster.lmstudio.ai/download/0.0.25-1-win32-x64.full.zip",
+    "sha512": "a17bfd052ea7a63182c4cd39b0619982e8027d19f6b00d0207207c8fa308540e502251662886a8ce8191a2bd0eb9132a48ee4991e784ebb5474d62ed3103fffe"
+  }
+}

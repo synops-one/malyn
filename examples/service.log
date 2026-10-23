@@ -1,0 +1,7 @@
+2026-01-04T00:00:01Z INFO demo-inventory health=ok
+2026-01-04T00:01:02Z ERROR client=demo-01 TLS certificate expired
+2026-01-04T00:01:04Z ERROR client=demo-02 TLS certificate expired
+2026-01-04T00:02:10Z WARN retry queue length=12
+2026-01-04T00:10:00Z INFO gateway certificate renewed
+2026-01-04T00:11:00Z INFO gateway configuration reloaded
+2026-01-04T00:12:00Z INFO client=demo-01 connection successful

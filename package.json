@@ -1,0 +1,66 @@
+{
+  "name": "malyn-local-worker",
+  "version": "0.0.42",
+  "license": "MIT",
+  "author": "Malyn contributors",
+  "type": "module",
+  "description": "Bounded local-model file work for coding agents over MCP",
+  "keywords": [
+    "mcp",
+    "local-llm",
+    "codex",
+    "lmstudio",
+    "worker"
+  ],
+  "bin": {
+    "malyn": "bin/malyn.mjs"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "loops/",
+    "skills/",
+    "profiles/",
+    "examples/",
+    "docs/",
+    "scripts/smoke.mjs",
+    "npm-shrinkwrap.json",
+    "plugin.json",
+    "mcp.json",
+    "LICENSE",
+    "THIRD_PARTY_NOTICES.md",
+    "LICENSES/",
+    "README.md",
+    "SECURITY.md",
+    "CHANGELOG.md",
+    "scripts/Malyn-Tray.ps1",
+    "scripts/Malyn-Startup.ps1",
+    "scripts/Malyn-Explorer.ps1",
+    "scripts/Ask-Malyn.ps1"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node bin/malyn.mjs serve",
+    "test": "node --test test/*.test.mjs",
+    "smoke": "node scripts/smoke.mjs",
+    "licenses": "node scripts/licenses.mjs",
+    "release:check": "node scripts/check-release.mjs",
+    "release:source": "node scripts/stage-source.mjs",
+    "prepack": "node scripts/check-release.mjs --source-only"
+  },
+  "dependencies": {
+    "@lmstudio/sdk": "2.1.0",
+    "@modelcontextprotocol/sdk": "1.32.1",
+    "zod": "3.25.76"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/synops-one/malyn.git"
+  },
+  "homepage": "https://github.com/synops-one/malyn#readme",
+  "bugs": {
+    "url": "https://github.com/synops-one/malyn/issues"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "whisper": {
+    "modelKey": "whisper/base",
+    "label": "Whisper Base",
+    "backend": "whisper.cpp 1.8.5 (Vulkan; jonasthilo build)",
+    "capabilities": ["audio", "transcription"],
+    "executable": "whisper-cli.exe",
+    "runtime": {"name":"whisper-vulkan-1.8.5","url":"https://github.com/jonasthilo/whisper.cpp/releases/download/v1.8.5/whisper-vulkan-bin-x64.zip","sha256":"a28d7e4e3ce204c5b9771b329240c9d10d6f1b76f43d0439cf0d36972c0333ff"},
+    "files": [
+      {"role":"model","name":"ggml-base.bin","url":"https://huggingface.co/ggerganov/whisper.cpp/resolve/5359861c739e955e79d9a303bcbc70fb988958b1/ggml-base.bin","sha256":"60ed5bc3dd14eea856493d334349b405782ddcaf0028d4b5df4088345fba2efe"}
+    ]
+  },
+  "embeddings": {
+    "modelKey": "qwen/qwen3-vl-embedding-2b",
+    "label": "Qwen3-VL-Embedding-2B",
+    "backend": "llama.cpp b11808 (Vulkan)",
+    "capabilities": ["text", "vision", "embedding"],
+    "dimensions": 2048,
+    "executable": "llama-server.exe",
+    "runtime": {"name":"llama-b11808","url":"https://github.com/ggml-org/llama.cpp/releases/download/b11808/llama-b11808-bin-win-vulkan-x64.zip","sha256":"a889a1f529ee8e69756f28efd5dd3e42db03f09dc88687047187ae1d4715f429"},
+    "files": [
+      {"role":"model","name":"Qwen3-VL-Embedding-2B.Q4_K_M.gguf","url":"https://huggingface.co/mradermacher/Qwen3-VL-Embedding-2B-GGUF/resolve/ac21c8784ed86e50391e32ed945f21e42140b1f6/Qwen3-VL-Embedding-2B.Q4_K_M.gguf","sha256":"7812c91cd1e03ab4d42fdc21264b9f9d116f8b57b350ac186bd9ec07546984da"},
+      {"role":"projector","name":"Qwen3-VL-Embedding-2B.mmproj-Q8_0.gguf","url":"https://huggingface.co/mradermacher/Qwen3-VL-Embedding-2B-GGUF/resolve/ac21c8784ed86e50391e32ed945f21e42140b1f6/Qwen3-VL-Embedding-2B.mmproj-Q8_0.gguf","sha256":"fa5a22b400fcfa32453656fdc7063bd2c80007030a79cb4f07f7c19cb1e40e8e"}
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "profile": "arc-b580",
+  "backend": "lmstudio",
+  "lmsPath": "lms.exe",
+  "modelKey": "google/gemma-4-12b-qat",
+  "modelIdentifier": "malyn-worker",
+  "gpuPattern": "Arc.*B580",
+  "runtimePattern": "vulkan",
+  "contextLength": 65536,
+  "kvCacheQuantization": "q8_0",
+  "maxOutputTokens": 2200,
+  "reasoningBudget": 300
+}

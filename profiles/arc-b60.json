@@ -1,0 +1,13 @@
+{
+  "profile": "arc-b60",
+  "backend": "lmstudio",
+  "lmsPath": "lms.exe",
+  "modelKey": "qwen/qwen3.8-27b",
+  "modelIdentifier": "malyn-worker",
+  "gpuPattern": "Arc.*Pro B60",
+  "runtimePattern": "vulkan",
+  "contextLength": 131072,
+  "kvCacheQuantization": "q8_0",
+  "maxOutputTokens": 2200,
+  "reasoningBudget": 300
+}
