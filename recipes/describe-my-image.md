@@ -1,6 +1,6 @@
 # Describe my image
 
-```malyn-loop
+```malyn-recipe
 {
   "schemaVersion": 1,
   "name": "describe-my-image",
@@ -23,8 +23,8 @@ Use when the user asks Malyn to describe an image, including an image attachment
 
 1. Resolve the attached image to an accessible local file. If the client has not provided a local file, request a local path or use its authorised attachment-download tool. Do not invent a path.
 2. Stage only the selected images in a fresh local input directory if their existing parent contains unrelated private files. Do not read image pixels into the frontier model merely to delegate. Images already attached to cloud chat may already have reached that provider.
-3. Submit `loop: "describe-my-image"`, the absolute input `root`, relative `images`, and any specific user question in `task`. PNG, JPEG and WebP are accepted, up to four images and 10 MiB each. Leave `returnMode` at `links`.
-4. Malyn verifies local model capabilities, selects an eligible installed model and loads it under its worker identifier. Use MCP `models` and `configure` to choose another installed model or supported settings if requested. A loop may pin `preferredModelKey`; an explicit per-job `modelKey` overrides that preference but must satisfy the capability requirements. No automatic model download or remote fallback occurs.
+3. Submit `recipe: "describe-my-image"`, the absolute input `root`, relative `images`, and any specific user question in `task`. PNG, JPEG and WebP are accepted, up to four images and 10 MiB each. Leave `returnMode` at `links`.
+4. Malyn verifies local model capabilities, selects an eligible installed model and loads it under its worker identifier. Use MCP `models` and `configure` to choose another installed model or supported settings if requested. A recipe may pin `preferredModelKey`; an explicit per-job `modelKey` overrides that preference but must satisfy the capability requirements. No automatic model download or remote fallback occurs.
 5. Poll the job. Confirm completion and the expected report path without opening the report. Give one generic completion sentence and a clickable local report link. Do not quote or summarise the image contents unless the user explicitly asks.
 
 ## Worker contract

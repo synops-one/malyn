@@ -49,14 +49,14 @@ try {
     $packText = & $releaseNode $npm pack --ignore-scripts --json --pack-destination $dist
     if ($LASTEXITCODE -ne 0) { throw 'npm pack failed.' }
     $packed = @(($packText -join "`n") | ConvertFrom-Json)[0]
-    foreach ($required in @('bin/malyn.mjs','src/worker.mjs','src/ask.mjs','src/components.mjs','src/component-worker.mjs','src/ui/index.html','src/ui/logo.png','src/ui/tray.png','src/desktop.mjs','scripts/Malyn-Tray.ps1','scripts/Malyn-Startup.ps1','scripts/Ask-Malyn.ps1','scripts/Malyn-Explorer.ps1','profiles/arc-b580.json','profiles/components.json','loops/ask-malyn.md','loops/describe-my-image.md','loops/windows-system-logs.md','loops/transcribe-audio.md','loops/embed-local-files.md','npm-shrinkwrap.json','LICENSE','plugin.json','mcp.json')) {
+    foreach ($required in @('bin/malyn.mjs','src/worker.mjs','src/ask.mjs','src/components.mjs','src/component-worker.mjs','src/ui/index.html','src/ui/logo.png','src/ui/tray.png','src/desktop.mjs','scripts/Malyn-Tray.ps1','scripts/Malyn-Startup.ps1','scripts/Ask-Malyn.ps1','scripts/Malyn-Explorer.ps1','profiles/arc-b580.json','profiles/components.json','recipes/ask-malyn.md','recipes/describe-my-image.md','recipes/windows-system-logs.md','recipes/transcribe-audio.md','recipes/embed-local-files.md','npm-shrinkwrap.json','LICENSE','plugin.json','mcp.json')) {
         if ($required -notin $packed.files.path) { throw "npm package is missing $required" }
     }
     Write-Host "Packed $($packed.filename): $($packed.files.Count) files."
 } finally { Pop-Location }
 $portable = Join-Path $stage "Malyn-$version-Windows-x64"
 New-Item -ItemType Directory -Path $portable | Out-Null
-foreach ($item in @('bin','src','loops','scripts','skills','profiles','examples','docs','LICENSES','node_modules','package.json','package-lock.json','npm-shrinkwrap.json','plugin.json','mcp.json','LICENSE','THIRD_PARTY_NOTICES.md','README.md','SECURITY.md','CHANGELOG.md','Install-Malyn.cmd','Install-Malyn.ps1','Remove-Malyn.ps1')) {
+foreach ($item in @('bin','src','recipes','scripts','skills','profiles','examples','docs','LICENSES','node_modules','package.json','package-lock.json','npm-shrinkwrap.json','plugin.json','mcp.json','LICENSE','THIRD_PARTY_NOTICES.md','README.md','SECURITY.md','CHANGELOG.md','Install-Malyn.cmd','Install-Malyn.ps1','Remove-Malyn.ps1')) {
     Copy-Item -LiteralPath (Join-Path $source $item) -Destination $portable -Recurse
 }
 $runtime = Join-Path $portable 'runtime'

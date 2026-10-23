@@ -73,7 +73,7 @@ function renderJobs(container,jobs) {
 }
 async function showJob(id,refresh=false) {
   if(!refresh)await navigate('jobs');selectedJob=id;const job=await api(`job?id=${encodeURIComponent(id)}`);
-  $('#job-detail').hidden=false;$('#job-title').textContent=job.loop || `Job ${id.slice(0,8)}`;
+  $('#job-detail').hidden=false;$('#job-title').textContent=job.recipe || job.loop || `Job ${id.slice(0,8)}`;
   const details=[job.status,job.status==='running'?job.phase:null,date(job.startedAt),job.model,job.elapsedSeconds?`${job.elapsedSeconds}s`:null,job.lastDecodeTokensPerSecond?`${job.lastDecodeTokensPerSecond.toFixed(1)} tokens/s (last decode)`:null].filter(Boolean);
   $('#job-info').textContent=details.join(' · ');if(!refresh){$('#report').hidden=true;$('#report').textContent='';}
   const actions=$('#job-actions');actions.replaceChildren();
@@ -90,14 +90,44 @@ async function refreshModels() {
   const result=await api('components'),container=$('#component-list');container.replaceChildren();
   for(const component of result.components){const item=element('div',undefined,'card');item.append(element('h3',component.label),element('p',component.installed?'Installed · loads when needed':'Optional download'),element('small',component.backend));if(!component.installed)item.append(element('pre',component.installCommand));container.append(item);}
 }
-async function refreshLoops() {
-  const result=await api('loops'),container=$('#loop-list');container.replaceChildren();
-  for(const loop of result.loops){
-    const card=element('article',undefined,'card');card.append(element('h2',loop.name),element('p',loop.description,'muted'));
-    const tags=element('div',undefined,'tags');for(const tag of [loop.origin,...loop.model.capabilities,...(loop.model.minContextLength?[`${loop.model.minContextLength.toLocaleString()}+ context`]:[])])tags.append(element('span',tag,'tag'));
-    card.append(tags,button('Read loop',async()=>{$('#loop-markdown').textContent=(await api(`loop?name=${encodeURIComponent(loop.name)}`)).markdown;$('#loop-detail').hidden=false;$('#loop-detail').scrollIntoView({behavior:'smooth'});}));container.append(card);
+async function exportRecipe(name) {
+  const response=await fetch(`/api/recipes/export?name=${encodeURIComponent(name)}`,{headers:{Authorization:`Bearer ${token}`}});
+  if(!response.ok){const result=await response.json();throw new Error(result.error || 'The recipe could not be exported.');}
+  const url=URL.createObjectURL(await response.blob()),link=document.createElement('a');
+  link.href=url;link.download=`${name}.md`;document.body.append(link);link.click();link.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),30000);
+  notice(`Recipe sent to your browser downloads: ${name}.md`);
+}
+async function refreshRecipes() {
+  const result=await api('recipes'),container=$('#recipe-list');container.replaceChildren();
+  for(const recipe of result.recipes){
+    const card=element('article',undefined,'card');card.append(element('h2',recipe.name),element('p',recipe.description,'muted'));
+    const tags=element('div',undefined,'tags');
+    for(const tag of [recipe.origin==='bundled'?'Included with Malyn':'Your recipe',...recipe.model.capabilities,...(recipe.model.minContextLength?[`${recipe.model.minContextLength.toLocaleString()}+ context`]:[])])tags.append(element('span',tag,'tag'));
+    const actions=element('div',undefined,'actions');
+    actions.append(button('Read recipe',async()=>{
+      $('#recipe-markdown').textContent=(await api(`recipe?name=${encodeURIComponent(recipe.name)}`)).markdown;
+      $('#recipe-title').textContent=recipe.name;$('#recipe-detail').hidden=false;$('#recipe-detail').scrollIntoView({behavior:'smooth'});
+    }),button('Export recipe',()=>exportRecipe(recipe.name)));
+    card.append(tags,actions);container.append(card);
   }
-  if(result.errors.length)notice('Some loop files could not be loaded: '+result.errors.map(item=>item.name).join(', '),true);
+  if(result.errors.length)notice('Some recipes need attention: '+result.errors.map(item=>item.name).join(', '),true);
+}
+let selectedRecipe, recipeSelection = 0;
+async function selectRecipe() {
+  const selection=++recipeSelection;
+  selectedRecipe=undefined;$('#import-recipe').disabled=true;$('#recipe-preview').hidden=true;$('#recipe-preview-text').textContent='';
+  const file=$('#recipe-file').files[0];
+  $('#recipe-selection').textContent=file?file.name:'Choose a .md file up to 64 KiB. You can read it here before adding it.';
+  if(!file)return;
+  if(!/^[a-z0-9]+(?:-[a-z0-9]+)*\.md$/.test(file.name) || file.name.length>67)throw new Error('Use a lowercase filename with hyphens, such as my-recipe.md. It must match the name inside the recipe.');
+  if(file.size>65536)throw new Error('Recipes must be 64 KiB or smaller.');
+  const markdown=new TextDecoder('utf-8',{fatal:true}).decode(await file.arrayBuffer());
+  if(selection!==recipeSelection)return;
+  selectedRecipe={filename:file.name,markdown};
+  $('#recipe-preview-text').textContent=markdown;$('#recipe-preview').hidden=false;
+  $('#recipe-selection').textContent=`${file.name} · ${file.size.toLocaleString()} bytes · ready to review`;
+  $('#import-recipe').disabled=false;
 }
 async function preferences() {
   const explorer=await api('explorer');$('#ask-explorer').checked=explorer.askInExplorer;$('#ask-explorer').disabled=!explorer.supported;
@@ -105,12 +135,13 @@ async function preferences() {
   if(!prefs.supported)$('#startup-note').textContent='Windows startup controls are only available on Windows.';
 }
 async function navigate(page) {
-  if(!['overview','settings','jobs','loops','advanced'].includes(page))page='overview';currentPage=page;
+  if(page==='loops')page='kitchen';
+  if(!['overview','settings','jobs','kitchen','advanced'].includes(page))page='overview';currentPage=page;
   document.querySelectorAll('.page').forEach(node=>node.hidden=node.id!==page);
   document.querySelectorAll('[data-page]').forEach(node=>{if(node.dataset.page===page)node.setAttribute('aria-current','page');else node.removeAttribute('aria-current');});
-  const labels={overview:'Overview',settings:'Models & settings',jobs:'Jobs & reports',loops:'Loops',advanced:'Advanced'};
+  const labels={overview:'Overview',settings:'Models & settings',jobs:'Jobs & reports',kitchen:'Kitchen',advanced:'Advanced'};
   $('#breadcrumb').textContent=`Workspace / ${labels[page]}`;
-  if(page==='loops')await refreshLoops();
+  if(page==='kitchen')await refreshRecipes();
   if(page==='settings'){if(state)fillForm('#settings-form',state.settings);await preferences();await refreshModels();}
   if(page==='advanced' && state)fillForm('#advanced-form',state.settings);
 }
@@ -128,7 +159,17 @@ for(const [id,route,message] of [['load-model','model/load','Configured model lo
 $('#start-windows').addEventListener('change',action(async()=>{try{await api('preferences',{startWithWindows:$('#start-windows').checked});notice('Windows startup preference saved.');}finally{await preferences();}}));
 $('#ask-explorer').addEventListener('change',action(async()=>{try{await api('explorer',{askInExplorer:$('#ask-explorer').checked});notice('Ask Malyn Explorer preference saved. On Windows 11, use Show more options.');}finally{await preferences();}}));
 $('#screenshot-mode').addEventListener('change',action(async()=>{try{await api('screenshots',{screenshotMode:$('#screenshot-mode').checked});notice($('#screenshot-mode').checked?'Screenshot mode enabled. Keep the Malyn tray running, then copy a new screenshot.':'Screenshot mode disabled. A job already submitted can finish.');}finally{await refreshState();}}));
-$('#install-loop-form').addEventListener('submit',action(async event=>{event.preventDefault();await api('loops/install',{path:event.target.elements.path.value});await refreshLoops();notice('Loop installed. No instructions were executed.');event.target.reset();}));
+$('#recipe-file').addEventListener('change',action(selectRecipe));
+$('#refresh-recipes').addEventListener('click',action(refreshRecipes));
+$('#import-recipe-form').addEventListener('submit',action(async event=>{
+  event.preventDefault();if(!selectedRecipe)throw new Error('Choose a recipe first.');
+  const selection=recipeSelection, recipe=selectedRecipe;$('#import-recipe').disabled=true;
+  try{
+    const result=await api('recipes/import',recipe);
+    if(selection===recipeSelection){event.target.reset();await selectRecipe();}
+    await refreshRecipes();notice(`${result.name} is in your Kitchen. Ask Malyn to use it when you’re ready.`);
+  }finally{$('#import-recipe').disabled=!selectedRecipe;}
+}));
 $('#close-ui').addEventListener('click',action(async()=>{await api('close',{});offline=true;notice('Admin server closed. Reopen it from the tray. MCP and active jobs keep running.');}));
 if(!token){offline=true;notice('Open Malyn from the tray or run malyn ui to start a local session.',true);}else{
   refreshState(true).then(async()=>{await navigate(initialPage);if(initialJob)await showJob(initialJob);}).catch(error=>{offline=true;notice(error.message,true);});

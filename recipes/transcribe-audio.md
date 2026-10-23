@@ -1,6 +1,6 @@
 # Transcribe audio locally
 
-```malyn-loop
+```malyn-recipe
 {
   "schemaVersion": 1,
   "name": "transcribe-audio",

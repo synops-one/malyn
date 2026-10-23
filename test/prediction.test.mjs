@@ -100,6 +100,6 @@ test('image loop supplies local images to the model and requires the named repor
     const result=await performTask(config,{root:directory,task:'Describe',images:['image.png'],loopSpec},directory,()=>{},new AbortController().signal,dependencies);
     assert.equal(result.status,'incomplete');
     assert.equal(result.imageCount,1);
-    assert.match(result.validationError,/required loop report/);
+    assert.match(result.validationError,/required recipe report/);
   } finally { await cleanup(directory); }
 });

@@ -18,7 +18,7 @@ assert.equal(mcp.mcpServers.malyn.args[0], '${PLUGIN_ROOT}/bin/malyn.mjs');
 assert.equal(mcp.mcpServers.malyn.args[1], 'serve');
 assert.match(await fs.readFile(path.join(root, pkg.bin.malyn), 'utf8'), /^#!\/usr\/bin\/env node/);
 for (const relative of ['profiles/arc-b580.json', 'profiles/arc-b60.json', 'profiles/custom.example.json']) validateConfig(await json(relative));
-for (const name of ['ask-malyn','describe-my-image', 'windows-system-logs', 'transcribe-audio', 'embed-local-files']) parseLoop(await fs.readFile(path.join(root, 'loops', `${name}.md`), 'utf8'), name);
+for (const name of ['ask-malyn','describe-my-image', 'windows-system-logs', 'transcribe-audio', 'embed-local-files']) parseLoop(await fs.readFile(path.join(root, 'recipes', `${name}.md`), 'utf8'), name);
 const inventory = await json('LICENSES/inventory.json');
 const deps = Object.entries(lock.packages).filter(([relative, entry]) => relative && !entry.dev);
 assert.equal(inventory.length, deps.length, 'License inventory must match the locked production dependency count.');

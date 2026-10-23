@@ -10,6 +10,39 @@ import { validateConfig, readConfig } from '../src/config.mjs';
 import { submitJob } from '../src/jobs.mjs';
 import { readControl } from '../src/control.mjs';
 import { cleanup } from './helpers.mjs';
+import { exportRecipe } from '../src/recipes.mjs';
+
+test('Kitchen import/export is authenticated, round-trips Markdown and never starts a job',async t=>{
+  const {directory,config,app,request}=await fixture(t);
+  const recipe=await exportRecipe(config,'describe-my-image');
+  const input={filename:'shared-image.md',markdown:recipe.markdown.replaceAll('describe-my-image','shared-image')};
+  assert.equal((await fetch(app.origin+'/api/recipes/export?name=describe-my-image')).status,401);
+  assert.equal((await request('/api/recipes/import',input,{Origin:'https://malicious.example'})).status,403);
+  const imported=await request('/api/recipes/import',input);
+  assert.equal(imported.status,200);assert.equal((await imported.json()).executed,false);
+  const downloaded=await request('/api/recipes/export?name=shared-image');
+  assert.equal(downloaded.status,200);
+  assert.equal(downloaded.headers.get('content-disposition'),'attachment; filename="shared-image.md"');
+  assert.equal(await downloaded.text(),input.markdown);
+  assert.equal((await (await request('/api/recipes')).json()).recipes.length,6);
+  assert.equal((await request('/api/recipes/import',input)).status,400);
+  assert.equal((await request('/api/recipes/export?name=..%2Fconfig')).status,400);
+  assert.equal((await request('/api/recipes/import',{...input,filename:'../outside.md'})).status,400);
+  assert.deepEqual((await (await request('/api/state')).json()).jobs,[]);
+  assert.equal(await fs.readFile(path.join(directory,'recipes',input.filename),'utf8'),input.markdown);
+});
+test('Kitchen supports the full recipe size limit even when JSON escaping expands the request',async t=>{
+  const {config,request}=await fixture(t);
+  const recipe=await exportRecipe(config,'describe-my-image');
+  const prefix=recipe.markdown.replaceAll('describe-my-image','large-recipe')+'\n## Notes\n';
+  const markdown=prefix+'\x01'.repeat(65536-Buffer.byteLength(prefix));
+  const input={filename:'large-recipe.md',markdown};
+  assert.equal((await request('/api/recipes/import',input)).status,200);
+  assert.equal(await (await request('/api/recipes/export?name=large-recipe')).text(),markdown);
+  assert.equal((await request('/api/recipes/import',{...input,markdown:markdown+'x'})).status,400);
+  assert.equal((await request('/api/recipes/import',{...input,markdown:'x'.repeat(400000)})).status,413);
+  assert.equal((await request('/api/settings',{notes:'x'.repeat(40000)})).status,413);
+});
 
 async function fixture(t, options={}) {
   const directory=await fs.mkdtemp(path.join(os.tmpdir(),'malyn-admin-'));

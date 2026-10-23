@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { randomUUID } from 'node:crypto';
 import { spawn } from 'node:child_process';
 import { inside } from './files.mjs';
-import { getLoop } from './loops.mjs';
+import { getRecipe as getLoop, recipeName } from './recipes.mjs';
 import { readImage } from './images.mjs';
 import { readConfig } from './config.mjs';
 import { readControl } from './control.mjs';
@@ -27,7 +27,7 @@ export async function getJob(configPath, id) {
     state = JSON.parse(await fs.readFile(path.join(directory, 'status.json'), 'utf8'));
     if(state.status==='running')state.status='interrupted';
   }
-  const result = { ...state, resultDirectory: directory };
+  const result = { ...state, ...(state.loop ? {recipe:state.loop} : {}), resultDirectory: directory };
   // Detailed generated text stays in local artifacts unless explicitly requested.
   if (state.returnMode !== 'summary') {
     delete result.summary;
@@ -102,13 +102,14 @@ export async function submitJob(configPath, config, request, options = {}) {
   return withSubmissionLock(configPath, async jobRoot => {
   if ((await readControl(configPath)).paused) return { status: 'paused', reason: 'Malyn is paused. Resume new tasks from the tray, admin UI or CLI.' };
   // Re-read inside the shared transaction so a settings change cannot race access checks.
-  const loop = request.loop ? await getLoop(configPath, request.loop) : null;
-  if (loop && !loop.platforms.includes(process.platform)) throw new Error('This loop does not support this platform.');
-  if (loop && Array.isArray(request.images ?? []) && ((request.images ?? []).length < loop.images.min || (request.images ?? []).length > loop.images.max)) throw new Error(`Loop ${loop.name} requires ${loop.images.min}–${loop.images.max} images.`);
+  const name = recipeName(request);
+  const loop = name ? await getLoop(configPath, name) : null;
+  if (loop && !loop.platforms.includes(process.platform)) throw new Error('This recipe does not support this platform.');
+  if (loop && Array.isArray(request.images ?? []) && ((request.images ?? []).length < loop.images.min || (request.images ?? []).length > loop.images.max)) throw new Error(`Recipe ${loop.name} requires ${loop.images.min}–${loop.images.max} images.`);
   if (!options.workerPath) config = await readConfig(configPath);
-  const input = await validateRequest(config, { ...request, task: request.task?.trim() || (loop ? `Run the ${loop.name} loop.` : request.task) });
+  const input = await validateRequest(config, { ...request, task: request.task?.trim() || (loop ? `Run the ${loop.name} recipe.` : request.task) });
   if (loop) {
-    if (input.images.length < loop.images.min || input.images.length > loop.images.max) throw new Error(`Loop ${loop.name} requires ${loop.images.min}–${loop.images.max} images.`);
+    if (input.images.length < loop.images.min || input.images.length > loop.images.max) throw new Error(`Recipe ${loop.name} requires ${loop.images.min}–${loop.images.max} images.`);
     const { markdown, path: loopPath, origin, ...snapshot } = loop;
     input.loopSpec = snapshot;
     if (['whisper','embeddings'].includes(loop.processor)) await componentInputs(input.root,input);

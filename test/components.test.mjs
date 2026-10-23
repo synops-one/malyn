@@ -23,7 +23,7 @@ test('audio format and duration limits reject unsupported or truncated input',()
 });
 test('component loops cannot replace a fixed processor with arbitrary model or executable arguments',async()=>{
   const loop=await getLoop(path.resolve('unused.config.json'),'transcribe-audio');
-  assert.throws(()=>parseLoop(loop.markdown.replace('whisper/base','arbitrary/model')),/Whisper loops/);
+  assert.throws(()=>parseLoop(loop.markdown.replace('whisper/base','arbitrary/model')),/Whisper recipes/);
   assert.throws(()=>parseLoop(loop.markdown.replace('"processor": "whisper"','"processor": "shell"')),/Invalid/);
   assert.throws(()=>componentSpec('__proto__'),/Choose/);
 });

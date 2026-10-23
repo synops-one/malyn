@@ -10,6 +10,23 @@ import { cleanup } from './helpers.mjs';
 const exec = promisify(execFile);
 const cli = (...args) => exec(process.execPath, [path.resolve('bin/malyn.mjs'), ...args], { windowsHide: true, timeout: 15000 });
 
+test('CLI recipes export and import preserve Markdown and refuse overwrites',async t=>{
+  const directory=await fs.mkdtemp(path.join(os.tmpdir(),'malyn-recipe-cli-'));
+  t.after(()=>cleanup(directory));
+  const config=path.join(directory,'config.json');
+  assert.equal(JSON.parse((await cli('recipes','--config',config)).stdout).recipes.length,5);
+  const output=path.join(directory,'describe-my-image.md');
+  await cli('recipe','export','describe-my-image',output,'--config',config);
+  const markdown=await fs.readFile(output,'utf8');
+  await assert.rejects(()=>cli('recipe','export','describe-my-image',output,'--config',config),/EEXIST/);
+  assert.equal(await fs.readFile(output,'utf8'),markdown);
+  await assert.rejects(()=>cli('recipe','export','describe-my-image',path.join(directory,'wrong.md'),'--config',config),/filename matches/);
+  const shared=path.join(directory,'shared-image.md');
+  await fs.writeFile(shared,markdown.replaceAll('describe-my-image','shared-image'));
+  assert.equal(JSON.parse((await cli('recipe','import',shared,'--config',config)).stdout).executed,false);
+  assert.match((await cli('recipe','shared-image','--config',config)).stdout,/malyn-recipe/);
+});
+
 test('CLI setup preserves existing config unless explicitly forced and creates a backup', async () => {
   const directory = await fs.mkdtemp(path.join(os.tmpdir(), 'malyn-cli-'));
   const config = path.join(directory, 'config.json');

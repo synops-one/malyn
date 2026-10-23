@@ -73,7 +73,7 @@ $version = (Get-Content -LiteralPath (Join-Path $source 'package.json') -Raw | C
 $appDir = Join-Path $destination ('versions\' + $version + '-' + [guid]::NewGuid().ToString('N').Substring(0,8))
 Write-Host "Malyn $version - installing to $destination"
 New-Item -ItemType Directory -Path $appDir -Force | Out-Null
-foreach ($item in @('bin','src','loops','scripts','skills','profiles','examples','docs','LICENSES','node_modules','package.json','package-lock.json','npm-shrinkwrap.json','plugin.json','mcp.json','LICENSE','THIRD_PARTY_NOTICES.md','README.md','SECURITY.md','CHANGELOG.md')) {
+foreach ($item in @('bin','src','recipes','scripts','skills','profiles','examples','docs','LICENSES','node_modules','package.json','package-lock.json','npm-shrinkwrap.json','plugin.json','mcp.json','LICENSE','THIRD_PARTY_NOTICES.md','README.md','SECURITY.md','CHANGELOG.md')) {
     $from = Join-Path $source $item
     if (-not (Test-Path -LiteralPath $from)) { throw "Incomplete installer: missing $item" }
     Copy-Item -LiteralPath $from -Destination $appDir -Recurse -Force

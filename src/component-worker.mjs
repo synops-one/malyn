@@ -88,8 +88,8 @@ async function releaseOwnModel(config) {
 }
 export async function performComponent(config,configPath,request,directory,update,signal) {
   const name=request.loopSpec.processor,spec=componentSpec(name),started=Date.now();
-  if(request.modelKey && request.modelKey!==spec.modelKey)throw new Error(`This loop requires ${spec.modelKey}.`);
-  if(request.loopSpec.model.preferredModelKey!==spec.modelKey)throw new Error('Loop model does not match its component processor.');
+  if(request.modelKey && request.modelKey!==spec.modelKey)throw new Error(`This recipe requires ${spec.modelKey}.`);
+  if(request.loopSpec.model.preferredModelKey!==spec.modelKey)throw new Error('Recipe model does not match its component processor.');
   update({phase:'verifying_model',model:spec.modelKey});
   let component;
   try {component=await getComponent(configPath,name,{verify:true});}

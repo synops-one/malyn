@@ -1,6 +1,6 @@
 {
   "name": "malyn-local-worker",
-  "version": "0.0.42",
+  "version": "0.0.42+kitchen.1",
   "license": "MIT",
   "author": "Malyn contributors",
   "type": "module",
@@ -18,7 +18,7 @@
   "files": [
     "bin/",
     "src/",
-    "loops/",
+    "recipes/",
     "skills/",
     "profiles/",
     "examples/",

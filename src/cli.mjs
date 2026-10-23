@@ -5,7 +5,8 @@ import { defaultConfigPath, defaults, findLms, readConfig, saveConfig, validateC
 import { inspect, lms, status } from './runtime.mjs';
 import { startServer } from './server.mjs';
 import { submitJob, getJob, cancelJob, listJobs } from './jobs.mjs';
-import { listLoops, getLoop, installLoop } from './loops.mjs';
+import { listLoops } from './loops.mjs';
+import { listRecipes, getRecipe, installRecipe, exportRecipe, recipeName } from './recipes.mjs';
 import { listModels, configureModel, prepareModel } from './models.mjs';
 import { readControl, setPaused, setScreenshotMode } from './control.mjs';
 import { ensureAdmin, openBrowser, launchTray, stopAdmin, stopDesktop, setStartup, syncStartup } from './desktop.mjs';
@@ -26,10 +27,11 @@ const help = `Malyn — a local worker for coding agents
   malyn explorer on|off|status|sync Manage the Ask Malyn right-click action
   malyn ask ABSOLUTE_FILE          Enriched summary in the local job UI
   malyn screenshots on|off|status  Analyse new clipboard images while tray runs
-  malyn submit --root ABS [--loop NAME] [--task TEXT] [--file RELATIVE ...]
+  malyn submit --root ABS [--recipe NAME] [--task TEXT] [--file RELATIVE ...]
                [--image RELATIVE ...] [--model KEY] [--return links|summary]
-  malyn loops | loop NAME | loop install ABS_FILE.md
-  malyn models | configure --model KEY [--context N] | prepare [--loop NAME]
+  malyn recipes | recipe NAME
+  malyn recipe import ABS_FILE.md | recipe export NAME OUTPUT.md
+  malyn models | configure --model KEY [--context N] | prepare [--recipe NAME]
   malyn components [install whisper|embeddings]  Optional local processors
   malyn check JOB_ID | cancel JOB_ID | jobs
 
@@ -53,7 +55,7 @@ export async function main(argv) {
     'max-output': { type: 'string' }, 'reasoning-budget': { type: 'string' },
     'allow-root': { type: 'string', multiple: true }, force: { type: 'boolean' }, 'no-probe': { type: 'boolean' },
     root: { type: 'string' }, task: { type: 'string' }, file: { type: 'string', multiple: true },
-    loop: { type: 'string' }, image: { type: 'string', multiple: true }, return: { type: 'string' },
+    recipe: { type: 'string' }, loop: { type: 'string' }, image: { type: 'string', multiple: true }, return: { type: 'string' },
     'no-open': { type: 'boolean' }, section: { type: 'string' },
     job: {type:'string'},
   } });
@@ -86,7 +88,7 @@ export async function main(argv) {
   if (command === 'ui') {
     await readConfig(filename);
     const session = await ensureAdmin(filename);
-    const section = ['overview','settings','jobs','loops','advanced'].includes(v.section) ? v.section : 'overview';
+    const section = ['overview','settings','jobs','kitchen','loops','advanced'].includes(v.section) ? v.section : 'overview';
     if(v.job)await getJob(filename,v.job);
     if (!v['no-open']) await openBrowser(`${session.origin}/#token=${session.token}&page=${v.job?'jobs':section}${v.job?'&job='+v.job:''}`);
     output({ admin:session.origin, browserOpened:!v['no-open'], loopbackOnly:true }); return;
@@ -127,10 +129,20 @@ export async function main(argv) {
   if (command === 'check') { output(await getJob(filename, p[1])); return; }
   if (command === 'cancel') { output(await cancelJob(filename, p[1])); return; }
   if (command === 'jobs') { output(await listJobs(filename)); return; }
+  if (command === 'recipes') { output(await listRecipes(filename)); return; }
   if (command === 'loops') { output(await listLoops(filename)); return; }
-  if (command === 'loop') {
-    if (p[1] === 'install') output(await installLoop(filename, path.resolve(p[2] ?? '')));
-    else console.log((await getLoop(filename, p[1])).markdown);
+  if (command === 'recipe' || command === 'loop') {
+    if (p[1] === 'import' || p[1] === 'install') {
+      if (!p[2]) throw new Error('Supply the recipe .md file to import.');
+      output(await installRecipe(filename, path.resolve(p[2])));
+    } else if (p[1] === 'export') {
+      if (!p[3] || path.extname(p[3]) !== '.md') throw new Error('Supply an output .md path. Existing files are never replaced.');
+      const recipe = await exportRecipe(filename, p[2]);
+      if (path.basename(p[3]) !== recipe.filename) throw new Error(`Use ${recipe.filename} so the filename matches its metadata.`);
+      const target = path.resolve(p[3]);
+      await fs.writeFile(target, recipe.markdown, {flag:'wx',mode:0o600});
+      output({exported:true,path:target});
+    } else console.log((await getRecipe(filename, p[1])).markdown);
     return;
   }
   if (command === 'configure') {
@@ -139,11 +151,11 @@ export async function main(argv) {
     for (const [option, key] of [['context','contextLength'],['max-output','maxOutputTokens'],['reasoning-budget','reasoningBudget']]) if (v[option] !== undefined) changes[key] = Number(v[option]);
     output(await configureModel(filename, changes)); return;
   }
-  if (command === 'prepare') { output(await prepareModel(filename, v.loop, v.model)); return; }
+  if (command === 'prepare') { output(await prepareModel(filename, recipeName(v), v.model)); return; }
   if (!['doctor', 'status', 'submit', 'models'].includes(command)) throw new Error(`Unknown command: ${command}. Run malyn --help.`);
   const config = await readConfig(filename);
   if (command === 'models') { output(await listModels(config)); return; }
-  if (command === 'submit') { output(await submitJob(filename, config, { root: v.root, task: v.task, files: v.file, images: v.image, loop: v.loop, modelKey: v.model, returnMode: v.return })); return; }
+  if (command === 'submit') { output(await submitJob(filename, config, { root: v.root, task: v.task, files: v.file, images: v.image, recipe: recipeName(v), modelKey: v.model, returnMode: v.return })); return; }
   const health = await status(config);
   if (command === 'doctor') await localModel(config);
   output({ ...health, config: filename, node: process.version, platform: process.platform, inferenceVerified: false });

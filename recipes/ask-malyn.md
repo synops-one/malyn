@@ -1,6 +1,6 @@
 # Ask Malyn
 
-```malyn-loop
+```malyn-recipe
 {
   "schemaVersion": 1,
   "name": "ask-malyn",
@@ -16,7 +16,7 @@
 
 Use for the Windows Explorer **Ask Malyn** action, CLI `malyn ask ABSOLUTE_FILE`, or an explicit enriched file summary. The Explorer/CLI path enforces exactly one selected file, excludes sibling-file reads and pins the configured general model (Gemma 4 12B by default). It loads that model if needed. Text/code must be valid UTF-8 and at most 2 MB; images must be PNG/JPEG/WebP at most 10 MiB. Unsupported documents need an explicit local conversion first. This version does not execute code, open embedded links or unpack archives.
 
-The supervisor can also submit this loop through MCP with a narrowly scoped input directory. Standard MCP file suggestions do not themselves restrict all reads to that file; the CLI/Explorer selected-file restriction is a separate enforced mode.
+The supervisor can also submit this recipe through MCP with a narrowly scoped input directory. Standard MCP file suggestions do not themselves restrict all reads to that file; the CLI/Explorer selected-file restriction is a separate enforced mode.
 
 ## Worker contract
 

@@ -29,9 +29,9 @@ export function selectModel(config, models, spec = {}, override) {
   const selected = requested ? models.find(m => m.modelKey === requested) :
     models.find(m => m.modelKey === config.modelKey && compatible(m)) ?? [...models].sort((a,b) => a.modelKey.localeCompare(b.modelKey)).find(compatible);
   if (!selected) throw new Error(requested ? `Local model ${requested} is not installed. No model was downloaded.` : `No installed local model satisfies ${capabilities.join(', ')}. List models and install a suitable model separately.`);
-  if (!compatible(selected)) throw new Error(`Model ${selected.modelKey} does not advertise the loop's required capabilities: ${capabilities.join(', ')}.`);
+  if (!compatible(selected)) throw new Error(`Model ${selected.modelKey} does not advertise the recipe's required capabilities: ${capabilities.join(', ')}.`);
   const minimum = spec.minContextLength ?? 8192;
-  if (selected.maxContextLength && selected.maxContextLength < minimum) throw new Error(`Model ${selected.modelKey} cannot satisfy the loop's minimum context ${minimum}.`);
+  if (selected.maxContextLength && selected.maxContextLength < minimum) throw new Error(`Model ${selected.modelKey} cannot satisfy the recipe's minimum context ${minimum}.`);
   const contextLength = Math.max(minimum, Math.min(config.contextLength, selected.maxContextLength || config.contextLength));
   const maxOutputTokens = Math.max(config.maxOutputTokens, spec.minOutputTokens ?? 32);
   return { config: validateConfig({ ...config, modelKey: selected.modelKey, contextLength, maxOutputTokens }), selected };
@@ -55,10 +55,10 @@ export async function prepareModel(configPath, loopName, modelKey, dependencies 
   return withIdleWorker(configPath, async () => {
     const config = await readConfig(configPath);
     const loop = loopName ? await getLoop(configPath, loopName) : null;
-    if (loop && !loop.platforms.includes(process.platform)) throw new Error('This loop does not support this platform.');
+    if (loop && !loop.platforms.includes(process.platform)) throw new Error('This recipe does not support this platform.');
     if (['whisper','embeddings'].includes(loop?.processor)) {
       const component=await getComponent(configPath,loop.processor,{verify:true});
-      if(modelKey && modelKey!==component.modelKey)throw new Error('Model does not match this component loop.');
+      if(modelKey && modelKey!==component.modelKey)throw new Error('Model does not match this component recipe.');
       return {ready:true,model:component.modelKey,loaded:false,loadsDuringJob:true,inferenceVerified:false};
     }
     const chosen = selectModel(config, await (dependencies.downloadedModels ?? downloadedModels)(config), loop?.model, modelKey);

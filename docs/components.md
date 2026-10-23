@@ -1,6 +1,6 @@
 # Optional GPU components
 
-The Windows x64 package includes the loops and integration code. Download their native runtimes and weights explicitly, either with `Install-Malyn.ps1 -WithComponents` or:
+The Windows x64 package includes the recipes and integration code. Download their native runtimes and weights explicitly, either with `Install-Malyn.ps1 -WithComponents` or:
 
 ```powershell
 Malyn.cmd components install whisper
@@ -8,7 +8,7 @@ Malyn.cmd components install embeddings
 Malyn.cmd components
 ```
 
-If you installed from source, use `node bin/malyn.mjs` instead of `Malyn.cmd`. Pass `--config PATH` to target another installation. Preferences and MCP `action: "components"` show installation status. Downloads happen during setup, never as an implicit result of submitting a loop. Allow several GB for weights, runtime archives and extraction. Files live in `components/` beside the configuration and are retained on upgrade/removal. If a release changes a component pin, rename its old component directory before reinstalling; stale builds are rejected.
+If you installed from source, use `node bin/malyn.mjs` instead of `Malyn.cmd`. Pass `--config PATH` to target another installation. Preferences and MCP `action: "components"` show installation status. Downloads happen during setup, never as an implicit result of submitting a recipe. Allow several GB for weights, runtime archives and extraction. Files live in `components/` beside the configuration and are retained on upgrade/removal. If a release changes a component pin, rename its old component directory before reinstalling; stale builds are rejected.
 
 ## GPU use and lifetime
 
@@ -19,7 +19,7 @@ The B580 profile applies `GGML_VK_DISABLE_HOST_VISIBLE_VIDMEM=1` to newly starte
 ## Transcribe audio
 
 ```powershell
-Malyn.cmd submit --loop transcribe-audio --root C:\audio --file recording.wav
+Malyn.cmd submit --recipe transcribe-audio --root C:\audio --file recording.wav
 ```
 
 Whisper Base accepts one mono 16 kHz, 16-bit PCM WAV, at most ten minutes and 20 MiB. Convert other formats locally first. Automatic language detection is used. The result is a draft transcript, not a diarized meeting record, microphone assistant or spoken reply. Check important wording against the recording. The default response contains a generic completion note and a link to `transcript.md`.
@@ -27,7 +27,7 @@ Whisper Base accepts one mono 16 kHz, 16-bit PCM WAV, at most ten minutes and 20
 ## Embed text and images
 
 ```powershell
-Malyn.cmd submit --loop embed-local-files --root C:\inputs --file note.txt --image photo.png
+Malyn.cmd submit --recipe embed-local-files --root C:\inputs --file note.txt --image photo.png
 ```
 
 Qwen3-VL-Embedding-2B Q4_K_M with a Q8 vision projector accepts one to four combined text files/images. Each UTF-8 text file is limited to 16,000 bytes; supported images are PNG/JPEG/WebP up to 10 MiB each. The component uses an 8,192-token context and last-token pooling with Qwen's retrieval instruction. The result is `embeddings.json`: source names and finite, L2-normalized 2,048-dimensional vectors. It supplies the building blocks for local similarity search; it does not create an index or support video in this release. Compare vectors made with the same model, quantization and prompting configuration.

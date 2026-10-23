@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.0.42+kitchen.1 (source preview)
+
+- Kitchen replaces the Loops screen, with a Markdown file picker, readable preview and recipe import/export.
+- Recipes now have canonical Markdown, CLI and MCP names. Earlier loop names and installed user recipes remain compatible.
+- Imports validate the recipe without executing it or overwriting existing recipes. Exports contain only the selected recipe.
+- This preview does not replace the published 0.0.42alphaz release assets.
+
 ## 0.0.42 — 0.0.42alphaz public preview
 
 - Released package, plugin, MCP server and Windows archives as 0.0.42 under the GitHub prerelease tag `v0.0.42alphaz`. This includes the 0.0.41 desktop features below.

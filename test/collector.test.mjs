@@ -9,7 +9,7 @@ import { cleanup } from './helpers.mjs';
 const exec = promisify(execFile);
 const psQuote = s => `'${s.replaceAll("'","''")}'`;
 async function fixture(directory, mode) {
-  const loop = await fs.readFile('loops/windows-system-logs.md','utf8');
+  const loop = await fs.readFile('recipes/windows-system-logs.md','utf8');
   const collector = path.join(directory,'collect.ps1');
   await fs.writeFile(collector,loop.match(/^```powershell\r?\n([\s\S]*?)^```/m)[1]);
   const output = path.join(directory,'snapshot');

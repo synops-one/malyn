@@ -9,6 +9,7 @@ import { readControl, setPaused, setScreenshotMode } from './control.mjs';
 import { configureAdmin, visibleSettings } from './admin-settings.mjs';
 import { listModels, prepareModel, unloadModel } from './models.mjs';
 import { listLoops, getLoop, installLoop } from './loops.mjs';
+import { listRecipes, getRecipe, importRecipe, exportRecipe, maxRecipeBytes } from './recipes.mjs';
 import { status } from './runtime.mjs';
 import { inside } from './files.mjs';
 import { startupStatus, setStartup, explorerStatus, setExplorer } from './desktop.mjs';
@@ -17,12 +18,12 @@ import { listComponents } from './components.mjs';
 export const sessionPath = config => path.join(path.dirname(path.resolve(config)), 'admin-session.json');
 const uiRoot = fileURLToPath(new URL('./ui/', import.meta.url));
 const assets = new Map([['/', ['index.html','text/html; charset=utf-8']], ['/app.js',['app.js','text/javascript; charset=utf-8']], ['/style.css',['style.css','text/css; charset=utf-8']], ['/logo.png',['logo.png','image/png']], ['/tray.png',['tray.png','image/png']]]);
-const cleanJob = job => Object.fromEntries(['id','status','phase','startedAt','finishedAt','loop','model','gpu','contextLength','elapsedSeconds','localPromptTokens','localGeneratedTokens','lastDecodeTokensPerSecond'].filter(key => job[key] !== undefined).map(key => [key,job[key]]));
+const cleanJob = job => Object.fromEntries(['id','status','phase','startedAt','finishedAt','recipe','loop','model','gpu','contextLength','elapsedSeconds','localPromptTokens','localGeneratedTokens','lastDecodeTokensPerSecond'].filter(key => job[key] !== undefined).map(key => [key,job[key]]));
 function reject(statusCode, message) { throw Object.assign(new Error(message), { statusCode }); }
-async function body(req) {
+async function body(req, limit = 32768) {
   if (!/^application\/json(?:;|$)/i.test(req.headers['content-type'] ?? '')) reject(415, 'Send application/json.');
   let size = 0; const chunks = [];
-  for await (const chunk of req) { size += chunk.length; if (size > 32768) reject(413, 'Request too large.'); chunks.push(chunk); }
+  for await (const chunk of req) { size += chunk.length; if (size > limit) reject(413, 'Request too large.'); chunks.push(chunk); }
   try { return JSON.parse(Buffer.concat(chunks).toString('utf8')); } catch { reject(400,'Invalid JSON.'); }
 }
 export async function readArtifact(config, id, name) {
@@ -82,6 +83,13 @@ export async function startAdminServer(configPath, options = {}) {
         }
         if (req.method === 'GET' && url.pathname === '/api/models') return json(res,await (options.listModels ?? listModels)(await readConfig(configPath)));
         if (req.method === 'GET' && url.pathname === '/api/components') return json(res,await listComponents(configPath));
+        if (req.method === 'GET' && url.pathname === '/api/recipes') return json(res,await listRecipes(configPath));
+        if (req.method === 'GET' && url.pathname === '/api/recipe') return json(res,{markdown:(await getRecipe(configPath,url.searchParams.get('name'))).markdown});
+        if (req.method === 'GET' && url.pathname === '/api/recipes/export') {
+          const recipe = await exportRecipe(configPath,url.searchParams.get('name'));
+          res.writeHead(200,{'Content-Type':'text/markdown; charset=utf-8','Content-Disposition':`attachment; filename="${recipe.filename}"`});
+          res.end(recipe.markdown); return;
+        }
         if (req.method === 'GET' && url.pathname === '/api/loops') return json(res,await listLoops(configPath));
         if (req.method === 'GET' && url.pathname === '/api/loop') return json(res,{markdown:(await getLoop(configPath,url.searchParams.get('name'))).markdown});
         if (req.method === 'GET' && url.pathname === '/api/preferences') return json(res,await (options.startupStatus ?? startupStatus)(configPath));
@@ -95,7 +103,7 @@ export async function startAdminServer(configPath, options = {}) {
           res.writeHead(200,{'Content-Type':'text/plain; charset=utf-8','Content-Disposition':'attachment'}); res.end(bytes); return;
         }
         if (req.method !== 'POST') reject(404,'Not found.');
-        const input = await body(req);
+        const input = await body(req, url.pathname === '/api/recipes/import' ? maxRecipeBytes * 6 + 1024 : 32768);
         if (url.pathname === '/api/control') return json(res,await setPaused(configPath,input.paused));
         if(url.pathname==='/api/screenshots'){
           if(typeof input.screenshotMode!=='boolean'||Object.keys(input).length!==1)reject(400,'Expected screenshotMode.');
@@ -103,6 +111,7 @@ export async function startAdminServer(configPath, options = {}) {
         }
         if (url.pathname === '/api/settings') return json(res,await configureAdmin(configPath,input,options));
         if (url.pathname === '/api/cancel') return json(res,await cancelJob(configPath,input.id));
+        if (url.pathname === '/api/recipes/import') return json(res,await importRecipe(configPath,input));
         if (url.pathname === '/api/loops/install') return json(res,await installLoop(configPath,input.path));
         if (url.pathname === '/api/runtime') return json(res,await (options.runtimeStatus ?? status)(await readConfig(configPath)));
         if (url.pathname === '/api/model/load') return json(res,await prepareModel(configPath));

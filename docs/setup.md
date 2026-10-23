@@ -65,14 +65,14 @@ The [Malyn skill](../skills/malyn-worker/SKILL.md) teaches Codex to choose usefu
 
 ## MCP clients
 
-Codex and Claude Code support local stdio MCP servers. The Windows installer registers Codex. To connect [Claude Code](https://code.claude.com/docs/en/mcp), use `claude mcp add --transport stdio malyn -- node C:\src\malyn\bin\malyn.mjs serve --config C:\path\malyn.config.json`. Use the installed private Node path if Node is not on PATH. Claude Code compatibility follows the standard MCP interface; a live Claude client has not been validated in this release. If you use another client, it needs local file/collection access to carry out the loop's supervisor steps.
+Codex and Claude Code support local stdio MCP servers. The Windows installer registers Codex. To connect [Claude Code](https://code.claude.com/docs/en/mcp), use `claude mcp add --transport stdio malyn -- node C:\src\malyn\bin\malyn.mjs serve --config C:\path\malyn.config.json`. Use the installed private Node path if Node is not on PATH. Claude Code compatibility follows the standard MCP interface; a live Claude client has not been validated in this release. If you use another client, it needs local file/collection access to carry out the recipe's supervisor steps.
 
 ## Job controls and limits
 
-The `malyn` MCP tool supports asynchronous `submit`, `check` and `cancel`, runtime `status`, loop discovery/installation, local model listing and supported configuration changes. Submit a task or loop name, an absolute root and optional relative files/images. It returns a job ID immediately. By default, checks return a generic note and artifact paths, keeping generated details local. Set `returnMode: "summary"` to opt into generated summary text. Only `completed` is a finished run; `failed`, `cancelled`, `interrupted` and `incomplete` need attention. One job runs per config directory.
+The `malyn` MCP tool supports asynchronous `submit`, `check` and `cancel`, runtime `status`, recipe discovery/installation, local model listing and supported configuration changes. Submit a task or recipe name, an absolute root and optional relative files/images. It returns a job ID immediately. By default, checks return a generic note and artifact paths, keeping generated details local. Set `returnMode: "summary"` to opt into generated summary text. Only `completed` is a finished run; `failed`, `cancelled`, `interrupted` and `incomplete` need attention. One job runs per config directory.
 
 Reads are bounded by paths, file size, tool-call count and a tokenizer-based context budget. Set `allowedRoots` to restrict the task roots your agent can choose. Common secret names and links are excluded, but this is not an OS sandbox or comprehensive secret scanner. Results and any artifacts your cloud agent reads may enter its cloud context. See [security boundaries](../SECURITY.md).
 
 Local prompt/generated tokens and decode speed are reported per job. They are not measured cloud tokens or quota saved. Small tasks and repeated corrections can erase the benefit. See [measurement](measurement.md), [configuration](configuration.md) and [synthetic examples](../examples/README.md).
 
-For reusable jobs and component model requirements, see [loops](loops.md) and [optional components](components.md). For build commands and package checks, see [releasing](releasing.md).
+For reusable jobs and component model requirements, see [recipes](recipes.md) and [optional components](components.md). For build commands and package checks, see [releasing](releasing.md).

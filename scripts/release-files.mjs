@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 
 export const sourceItems = [
-  'bin', 'src', 'loops', 'skills', 'profiles', 'examples', 'docs', 'test', '.github', 'LICENSES',
+  'bin', 'src', 'recipes', 'skills', 'profiles', 'examples', 'docs', 'test', '.github', 'LICENSES',
   '.gitignore', 'package.json', 'package-lock.json', 'npm-shrinkwrap.json', 'plugin.json', 'mcp.json',
   'LICENSE', 'THIRD_PARTY_NOTICES.md', 'README.md', 'SECURITY.md', 'CHANGELOG.md', 'CONTRIBUTING.md',
   'Install-Malyn.cmd', 'Install-Malyn.ps1', 'Remove-Malyn.ps1',

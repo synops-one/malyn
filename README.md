@@ -62,7 +62,7 @@ Recipes are reusable instructions for a job. Each is a small Markdown file that 
 
 She comes with recipes for **file summaries, Windows logs, image descriptions, audio transcription and text/image embeddings**. The embedding recipe prepares data for developers creating search tools; it doesn't include a search app.
 
-See [how recipes work](docs/loops.md), [example jobs](examples/README.md) and [optional audio and embedding components](docs/components.md).
+See [how recipes work](docs/recipes.md), [example jobs](examples/README.md) and [optional audio and embedding components](docs/components.md).
 
 ## About this preview
 
@@ -72,6 +72,8 @@ See [how recipes work](docs/loops.md), [example jobs](examples/README.md) and [o
 - **The demo shows the 0.0.41 development build.** It uses real product footage and synthetic files. Processing waits are cut out and labelled; it isn't a speed benchmark.
 
 ## Cook with her
+
+Her **Kitchen** is where your recipes live. Import a Markdown recipe, read what it does and export a copy to share or adapt. The Kitchen is available in the current source preview, `0.0.42+kitchen.1`; the published `0.0.42alphaz` download still has the earlier Loops screen.
 
 For model settings and advanced options, see [configuration](docs/configuration.md) and the [setup and command-line guide](docs/setup.md). To compare speed or token use, see [measurement](docs/measurement.md); local token counts aren't a measure of cloud tokens saved.
 
@@ -89,7 +91,7 @@ the optional component. She is useful when a clear, limited task needs substanti
 local reading and the person benefits from keeping bulk data on their own hardware.
 The main agent can keep planning and verification while she handles that work.
 
-Read skills/malyn-worker/SKILL.md for delegation guidance, docs/loops.md for recipe
+Read skills/malyn-worker/SKILL.md for delegation guidance, docs/recipes.md for recipe
 contracts, docs/setup.md for setup and SECURITY.md for the data boundaries.
 Give her a clear question, narrow input scope and a useful output, within the
 person's request and existing permissions. Prefer direct tools for trivial work.

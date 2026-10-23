@@ -1,12 +1,12 @@
 {
   "name": "malyn-local-worker",
-  "version": "0.0.42",
+  "version": "0.0.42+kitchen.1",
   "lockfileVersion": 3,
   "requires": true,
   "packages": {
     "": {
       "name": "malyn-local-worker",
-      "version": "0.0.42",
+      "version": "0.0.42+kitchen.1",
       "license": "MIT",
       "dependencies": {
         "@lmstudio/sdk": "2.1.0",

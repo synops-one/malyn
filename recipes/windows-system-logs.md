@@ -1,6 +1,6 @@
 # Windows system logs
 
-```malyn-loop
+```malyn-recipe
 {
   "schemaVersion": 1,
   "name": "windows-system-logs",
@@ -90,7 +90,7 @@ $groups = @($records | Group-Object channel,provider,eventId,level | ForEach-Obj
     $times = @($_.Group.utc | Sort-Object)
     [pscustomobject]@{ channel=$first.channel; provider=$first.provider; eventId=$first.eventId; level=$first.level; countInCollectedSample=$_.Count; firstUtc=$times[0]; lastUtc=$times[-1]; exampleEvidenceIds=@($_.Group | Select-Object -First 3 -ExpandProperty evidenceId); exampleSources=@($_.Group | Select-Object -First 2 | ForEach-Object { $locations[$_.evidenceId] }) }
 } | Sort-Object countInCollectedSample -Descending)
-$manifest = [ordered]@{ loop='windows-system-logs'; collectorVersion=1; collectedAtUtc=(Get-Date).ToUniversalTime().ToString('o'); startUtc=$start.ToUniversalTime().ToString('o'); endUtc=$end.ToUniversalTime().ToString('o'); levels=@(1,2,3); maxEventsPerChannel=$MaxEventsPerChannel; channels=$coverage; totalCollected=$records.Count; countsReferTo='collected sample only' }
+$manifest = [ordered]@{ recipe='windows-system-logs'; collectorVersion=1; collectedAtUtc=(Get-Date).ToUniversalTime().ToString('o'); startUtc=$start.ToUniversalTime().ToString('o'); endUtc=$end.ToUniversalTime().ToString('o'); levels=@(1,2,3); maxEventsPerChannel=$MaxEventsPerChannel; channels=$coverage; totalCollected=$records.Count; countsReferTo='collected sample only' }
 [IO.File]::WriteAllText((Join-Path $target 'coverage.json'),($manifest | ConvertTo-Json -Depth 8),$encoding)
 $groupLines = @($groups | ForEach-Object { ConvertTo-Json -InputObject $_ -Depth 8 -Compress })
 [IO.File]::WriteAllText((Join-Path $target 'groups.json'),("[`n" + ($groupLines -join ",`n") + "`n]"),$encoding)
@@ -98,7 +98,7 @@ $groupLines = @($groups | ForEach-Object { ConvertTo-Json -InputObject $_ -Depth
 [pscustomobject]@{ directory=$target; collected=$records.Count; channelStatuses=@($coverage | Select-Object channel,status,eventLimitReached) } | ConvertTo-Json -Depth 5
 ```
 
-Submit `loop: "windows-system-logs"` with this snapshot directory as `root`, `files: ["coverage.json", "groups.json", "evidence-index.json"]`, and any user-specific question in `task`. Leave `returnMode` at `links`. Malyn reads event shards locally as needed. A larger investigation should use bounded periods/batches and retain partial-coverage statements. The worker verifies the loop's model requirements before inference and loads a suitable installed model as needed.
+Submit `recipe: "windows-system-logs"` with this snapshot directory as `root`, `files: ["coverage.json", "groups.json", "evidence-index.json"]`, and any user-specific question in `task`. Leave `returnMode` at `links`. Malyn reads event shards locally as needed. A larger investigation should use bounded periods/batches and retain partial-coverage statements. The worker verifies the recipe's model requirements before inference and loads a suitable installed model as needed.
 
 ## Worker contract
 
@@ -116,4 +116,4 @@ Required artifact: `system-log-report.md`. Malyn checks completion and report ex
 
 Default chat response: **System log review ready. [Open Malyn's report](LOCAL_REPORT_PATH)**. Use the actual returned path. If collection is unavailable or the job is unfinished, give a generic status and the diagnostic path; do not claim a successful host audit.
 
-The collector uses query-time filters and event caps documented in the [Microsoft Get-WinEvent reference](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.diagnostics/get-winevent?view=powershell-5.1). Security logs, remote computers, continuous monitoring and remediation are outside this default loop.
+The collector uses query-time filters and event caps documented in the [Microsoft Get-WinEvent reference](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.diagnostics/get-winevent?view=powershell-5.1). Security logs, remote computers, continuous monitoring and remediation are outside this default recipe.
