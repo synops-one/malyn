@@ -56,13 +56,13 @@ Malyn processes files locally and keeps detailed results on your computer. You c
 
 Give her only the files or small folder needed for the task. Her file controls aren't a complete secret scanner or an operating-system sandbox. Read the [data and security guide](SECURITY.md) for the boundaries.
 
-## Give her a new loop
+## Give her a new recipe
 
-Loops are reusable recipes for a job. Each is a small Markdown file that describes the work, the model she needs and how to check the result. You can write your own and share them.
+Recipes are reusable instructions for a job. Each is a small Markdown file that describes the work, the model she needs and how to check the result. You can cook up your own and share them.
 
-She comes with loops for **file summaries, Windows logs, image descriptions, audio transcription and text/image embeddings**. The embedding loop prepares data for developers building search tools; it doesn't include a search app.
+She comes with recipes for **file summaries, Windows logs, image descriptions, audio transcription and text/image embeddings**. The embedding recipe prepares data for developers creating search tools; it doesn't include a search app.
 
-See [how loops work](docs/loops.md), [example jobs](examples/README.md) and [optional audio and embedding components](docs/components.md).
+See [how recipes work](docs/loops.md), [example jobs](examples/README.md) and [optional audio and embedding components](docs/components.md).
 
 ## About this preview
 
@@ -71,7 +71,7 @@ See [how loops work](docs/loops.md), [example jobs](examples/README.md) and [opt
 - **One job at a time.** Malyn needs her configured GPU. She won't silently switch to your CPU or a cloud model, and she doesn't queue new jobs while busy.
 - **The demo shows the 0.0.41 development build.** It uses real product footage and synthetic files. Processing waits are cut out and labelled; it isn't a speed benchmark.
 
-## Build with her
+## Cook with her
 
 For model settings and advanced options, see [configuration](docs/configuration.md) and the [setup and command-line guide](docs/setup.md). To compare speed or token use, see [measurement](docs/measurement.md); local token counts aren't a measure of cloud tokens saved.
 
@@ -89,7 +89,7 @@ the optional component. She is useful when a clear, limited task needs substanti
 local reading and the person benefits from keeping bulk data on their own hardware.
 The main agent can keep planning and verification while she handles that work.
 
-Read skills/malyn-worker/SKILL.md for delegation guidance, docs/loops.md for loop
+Read skills/malyn-worker/SKILL.md for delegation guidance, docs/loops.md for recipe
 contracts, docs/setup.md for setup and SECURITY.md for the data boundaries.
 Give her a clear question, narrow input scope and a useful output, within the
 person's request and existing permissions. Prefer direct tools for trivial work.
